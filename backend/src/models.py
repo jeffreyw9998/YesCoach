@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-
+from typing import List, Dict
+import datetime
 from .database import Base
 
 
@@ -14,7 +15,7 @@ class User(Base):
     height: Mapped[float]       = Column(nullable=False)
     age: Mapped[int]            = Column(nullable=False)
 
-    items: Mapped["HealthData"] = relationship(back_populates="users")
+    items: Mapped[Dict("HealthData")] = relationship(back_populates="users")
 
 class HealthData(Base):
     __tablename__ = "healthdata"
