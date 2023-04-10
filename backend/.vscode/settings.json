@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "ec2-3-135-241-139.us-east-2.compute.amazonaws.com",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "CS125",
+            "database": "cs125",
+            "username": "app_user",
+            "password": "cs125psql2023"
+        }
+    ]
+}
