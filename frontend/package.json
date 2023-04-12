@@ -14,7 +14,7 @@
   "private": true,
   "dependencies": {
     "@angular/common": "^15.0.0",
-    "@angular/core": "^15.0.0",
+    "@angular/core": "^15.2.6",
     "@angular/forms": "^15.0.0",
     "@angular/platform-browser": "^15.0.0",
     "@angular/platform-browser-dynamic": "^15.0.0",
@@ -27,6 +27,7 @@
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "4.1.1",
     "@ionic/angular": "^7.0.0",
+    "@ionic/cli": "^7.0.1",
     "ionicons": "^7.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
