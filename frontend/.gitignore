@@ -67,6 +67,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-environtments/environment.ts
-environtments/environment.prod.ts
+# Ignore environment files
+.env
+**/environments/*.ts
 
