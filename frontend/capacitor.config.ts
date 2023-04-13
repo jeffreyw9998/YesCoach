@@ -7,10 +7,12 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
   // plugins: {
   // }
-
   plugins: {
-
-  },
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["google.com"]
+    }
+  }
 };
 
 export default config;

@@ -1,8 +1,17 @@
-import {Injectable} from '@angular/core';
-import {isPlatform} from "@ionic/angular";
+import {Injectable, NgZone} from '@angular/core';
+import {Platform} from "@ionic/angular";
 import {StorageService} from "./storage.service";
 import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {AuthCredential, FirebaseAuthentication, User} from "@capacitor-firebase/authentication";
+import {initializeApp} from "firebase/app";
+import {environment} from "../environments/environment";
+
+
+interface GoogleUser extends  User{
+  authentication: AuthCredential;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -10,42 +19,91 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 export class GoogleService {
 
   userSubject = new Subject<any>();
-  user = null;
+  user: GoogleUser | null = null;
   baseUrl = 'https://www.googleapis.com/fitness/v1/users/me';
 
-  headers = new HttpHeaders().set('Content-Type', 'application/json;encoding=utf-8');
-  constructor(private storage: StorageService, private http: HttpClient) {
+  headers = new HttpHeaders().set('Content-Type', 'application/json;encoding=utf-8')
+  constructor(private storage: StorageService, private http: HttpClient, private readonly  platform: Platform,
+              private readonly ngZone: NgZone) {
     // Initialize GoogleAuth plugin if not on Capacitor because
     // Capacitor will initialize it automatically
 
-    if (this.user === null) {
-      this.storage.get('user').then((user) => {
-        if (typeof user === "string") {
-          // this.user = JSON.parse(user) as User;
-          // Set headers;
-          // this.headers = this.headers.set('Authorization', `Bearer ${this.user.authentication.accessToken}`);
-        }
+    FirebaseAuthentication.removeAllListeners().then(() => {
+      FirebaseAuthentication.addListener('authStateChange', (change) => {
+        this.ngZone.run(() => {
+          this.userSubject.next(change.user);
+        });
       });
-    }
-
+    });
+    // Only needed to support dev livereload.
+    FirebaseAuthentication.getCurrentUser().then((result) => {
+      this.userSubject.next(result.user);
+    });``
   }
 
+  public async initialize(): Promise<void> {
+    if (this.platform.is('capacitor')) {
+      return;
+    }
+    /**
+     * Only needed if the Firebase JavaScript SDK is used.
+     *
+     * Read more: https://github.com/robingenz/capacitor-firebase/blob/main/packages/authentication/docs/firebase-js-sdk.md
+     */
+    initializeApp(environment.firebase);
+
+    if (this.user === null) {
+      const user = await this.storage.get('user');
+      if (typeof user === "string") {
+        this.user = JSON.parse(user);
+        // Set authentication header
+      }
+    }
+  }
 
   async signIn() {
     // this.user =
 
     // Save user in storage
+    const result = await FirebaseAuthentication.signInWithGoogle(
+      {mode: 'popup', scopes: [
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile',
+          'https://www.googleapis.com/auth/fitness.activity.read',
+          'https://www.googleapis.com/auth/fitness.body.read',
+          'https://www.googleapis.com/auth/fitness.heart_rate.read',
+          'https://www.googleapis.com/auth/fitness.body_temperature.read',
+          'https://www.googleapis.com/auth/fitness.nutrition.read',
+          'https://www.googleapis.com/auth/fitness.sleep.read',
+          'https://www.googleapis.com/auth/calendar',
+          'https://www.googleapis.com/auth/calendar.readonly',
+          'https://www.googleapis.com/auth/calendar.events',
+          'https://www.googleapis.com/auth/calendar.events.readonly',
+          'https://www.googleapis.com/auth/calendar.settings.readonly',
+          'https://www.googleapis.com/auth/calendar.freebusy'
+        ] }
+    );
+    this.user = result.user as GoogleUser;
+    this.user.authentication = result.credential as AuthCredential;
+
     await this.storage.set('user', JSON.stringify(this.user));
 
 
+
+
+    // If the authorization header is not set, set the authorization header.
   }
 
 
   async signOut() {
-
+    await FirebaseAuthentication.signOut();
+    this.user = null;
   }
 
   async refresh() {
+    // const result = await FirebaseAuthentication.;
+    // this.user = result.user as GoogleUser;
+    // await this.storage.set('user', JSON.stringify(this.user));
   }
 
 
@@ -53,7 +111,7 @@ export class GoogleService {
     const queryParams =  new HttpParams().set('startTime', fromDate).set('endTime', toDate);
     return this.http.get(`${this.baseUrl}/sessions`, {
         params: queryParams,
-      headers: this.headers
+      headers: this.headers.set('Authorization', `Bearer ${this.user?.authentication.accessToken}`)
     });
 
   }

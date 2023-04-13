@@ -37,4 +37,9 @@ export class LoginPage implements OnInit {
   async refresh(){
     await this.gAuth.refresh();
   }
+
+
+  async signOut(){
+    await this.gAuth.signOut();
+  }
 }
