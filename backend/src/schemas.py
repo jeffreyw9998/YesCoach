@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-import datetime
+from datetime import datetime
 
 class HealthDataBase(BaseModel):
     data_type: str
     description: str | None = None
 
 class HealthDataCreate(HealthDataBase):
-    data_date: datetime
+    data_date: datetime | None = None
 
 
 class HealthData(HealthDataBase):
