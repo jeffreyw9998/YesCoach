@@ -1,0 +1,28 @@
+.main-div {
+    margin: 8px;
+}
+
+.header {
+    font-size: 30px;
+    margin-top: 16;
+}
+
+.past-container {
+    background-color: rgb(30, 30, 30);
+    outline-color: rgb(26, 25, 25);
+    outline-width: 1px;
+    outline-style: solid;
+    padding: 8px;
+    border-radius: 10px;   
+}
+
+.activity-div {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.date {
+    color: rgb(218, 84, 31);
+    font-style: italic;
+}
