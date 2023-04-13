@@ -23,20 +23,6 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
-
-config = Config('.env')
-oauth = OAuth(config)
-
-CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
-oauth.register(
-    name='google',
-    server_metadata_url=CONF_URL,
-    client_kwargs={
-        'scope': 'openid email profile'
-    }
-)
 
 
 
@@ -50,24 +36,7 @@ def get_db():
 
 
 
-#FastAPI Functions
-@app.get('/login')
-async def login(request: Request):
-    # absolute url for callback
-    # we will define it below
-    redirect_uri = request.url_for('auth')
-    return await oauth.google.authorize_redirect(request, redirect_uri)
-
-@app.get('/auth')
-async def auth(request: Request):
-    try:
-        access_token = await oauth.google.authorize_access_token(request)
-    except OAuthError:
-        return RedirectResponse(url='/')
-    user_data = await oauth.google.parse_id_token(request, access_token)
-    request.session['user'] = dict(user_data)
-    return RedirectResponse(url='/')
-
+#FastAPI Function
 @app.get('/')
 def public(request: Request):
     user = request.session.get('user')
@@ -76,8 +45,3 @@ def public(request: Request):
         return HTMLResponse(f'<p>Hello {name}!</p><a href=/logout>Logout</a>')
     return HTMLResponse('<a href=/login>Login</a>')
 
-
-@app.get('/logout')
-async def logout(request: Request):
-    request.session.pop('user', None)
-    return RedirectResponse(url='/')
