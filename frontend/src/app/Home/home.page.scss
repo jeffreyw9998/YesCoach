@@ -1,10 +1,11 @@
 .stat-card {
     
     
-    outline: #762804 solid 1px;
+    outline: #787878 solid 1px;
     border-radius: 0.5rem;
-    background-color: rgb(218, 84, 31);
-   
+    background-color: rgb(35, 35, 35);
+    color: rgb(218, 84, 31);
+    font-weight: bold;
     padding: 2px;
     height: 100%;
     text-align: center;
@@ -18,6 +19,10 @@
     font-weight: bold;
     margin-top: 36px;
     font-size: 32px;
+}
+
+p {
+    color: white;
 }
 
 .stats-title {
