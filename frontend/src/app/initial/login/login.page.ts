@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {GoogleService} from "../google.service";
+import {GoogleService} from "../../services/gService/google.service";
 import {Observable, Subject} from "rxjs";
+import {Router} from "@angular/router";
+import {ApiService} from "../../services/apiservice/api.service";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,9 @@ export class LoginPage implements OnInit {
 
   sessionData: Observable<any> = new Subject<any>();
 
-  constructor(private gAuth: GoogleService) { }
+  constructor(private gAuth: GoogleService,
+              private readonly router: Router,
+              private readonly apiService: ApiService) { }
 
   ngOnInit() {
   }
@@ -24,13 +28,15 @@ export class LoginPage implements OnInit {
 
   async signInWithGoogle(){
     await this.gAuth.signIn();
-  }
 
-
-  getActivities(){
-    const today = new Date().toISOString();
-    const aWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
-    this.sessionData = this.gAuth.getActivities(aWeekAgo, today);
+    // Redirect to register page if user is not registered in database
+    if (!this.apiService.userExists(this.gAuth.user!.uid)){
+      await this.router.navigate(['/register']);
+    }
+    else{
+      await this.router.navigate(['/']);
+    }
+    // Redirect to home otherwise
   }
 
 

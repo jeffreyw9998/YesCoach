@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">register</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid class="ion-margin">
+    <ion-row class="ion-justify-content-center ion-padding-bottom">
+      <ion-img [src]="photoUrl" alt="User photo"></ion-img>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Name</ion-label>
+          <ion-input autocapitalize="words" type="text" [(ngModel)]="userInfo.name" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" [(ngModel)]="userInfo.email" [disabled]="true"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-select color="primary" label="What is your goal?" labelPlacement="floating" interface="popover">
+          <ion-select-option value="apples">Apples</ion-select-option>
+          <ion-select-option value="oranges">Oranges</ion-select-option>
+          <ion-select-option value="bananas">Bananas</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" (click)="register()">Register</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

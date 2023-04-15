@@ -12,22 +12,7 @@
         <ion-button size="medium" (click)="signInWithGoogle()" expand="block">Sign in with <ion-icon name="logo-google"></ion-icon>oogle
         </ion-button>
       </ion-col>
-
     </ion-row>
-
-    <ion-row>
-      <ion-col size="12">
-        <ion-button size="medium" (click)="signOut()" expand="block">Sign out</ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="12">
-        <ion-button size="medium" (click)="getActivities()" expand="block">Get Activities</ion-button>
-      </ion-col>
-    </ion-row>
-
-    {{sessionData | async | json}}
   </ion-grid>
 
 
