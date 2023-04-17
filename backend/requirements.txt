@@ -19,3 +19,4 @@ starlette
 typing-extensions
 uvicorn
 sqlalchemy
+psycopg2
