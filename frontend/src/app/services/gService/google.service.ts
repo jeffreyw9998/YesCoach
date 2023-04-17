@@ -24,23 +24,18 @@ export class GoogleService {
   isLoggedIn = false;
   constructor(private storage: StorageService, private http: HttpClient, private readonly platform: Platform,
               private readonly ngZone: NgZone) {
-    // Initialize GoogleAuth plugin if not on Capacitor because
-    // Capacitor will initialize it automatically
-
     FirebaseAuthentication.removeAllListeners().then(() => {
       FirebaseAuthentication.addListener('authStateChange', (change) => {
         this.ngZone.run(() => {
-          this.userSubject.next(change.user);
+          // this.userSubject.next(change.user);
         });
       });
     });
     // Only needed to support dev livereload.
     FirebaseAuthentication.getCurrentUser().then((result) => {
-      this.userSubject.next(result.user);
+      // this.userSubject.next(result.user);
     });
   }
-
-
 
   public async initialize(): Promise<void> {
     if (this.platform.is('capacitor')) {

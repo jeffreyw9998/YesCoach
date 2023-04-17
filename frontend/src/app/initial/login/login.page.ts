@@ -16,8 +16,6 @@ import {ApiService} from "../../services/apiservice/api.service";
 })
 export class LoginPage implements OnInit {
 
-  sessionData: Observable<any> = new Subject<any>();
-
   constructor(private gAuth: GoogleService,
               private readonly router: Router,
               private readonly apiService: ApiService) { }

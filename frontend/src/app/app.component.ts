@@ -18,18 +18,6 @@ export class AppComponent {
               private readonly router: Router) {
     googleAuthService.initialize().then(() => {
       console.log('GoogleAuth initialized.')
-      // if (this.googleAuthService.user === null){
-      //   // Redirect to login
-      //   this.router.navigate(['/login']).then(r => {
-      //     console.log(r);
-      //   });
-      // }
-      // else{
-      //   // Redirect to home
-      //   this.router.navigate(['/']).then(r => {
-      //     console.log(r);
-      //   });
-      // }
     });
 
   }

@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-title>Register</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -18,26 +18,45 @@
     <ion-row>
       <ion-col size="12">
         <ion-item>
-          <ion-label position="floating">Name</ion-label>
-          <ion-input autocapitalize="words" type="text" [(ngModel)]="userInfo.name" color="primary"></ion-input>
+          <ion-input label="Name" label-placement="floating" autocapitalize="words" required="true" type="text"
+                     [(ngModel)]="userInfo.name" color="primary"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="12">
         <ion-item>
-          <ion-label position="floating">Email</ion-label>
-          <ion-input type="email" [(ngModel)]="userInfo.email" [disabled]="true"></ion-input>
+          <ion-input label="Email" label-placement="floating" type="email" [(ngModel)]="userInfo.email"
+                     readonly="true" color="primary"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12">
-        <ion-select color="primary" label="What is your goal?" labelPlacement="floating" interface="popover">
-          <ion-select-option value="apples">Apples</ion-select-option>
-          <ion-select-option value="oranges">Oranges</ion-select-option>
-          <ion-select-option value="bananas">Bananas</ion-select-option>
-        </ion-select>
+      <ion-col size="6">
+        <ion-item>
+          <ion-input label="Height (inches)" label-placement="floating" type="number" required="true"
+                     [(ngModel)]="userInfo.height" min="20" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Weight (pounds)" label-placement="floating" type="number" required="true"
+                     [(ngModel)]="userInfo.weight" min="7" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Birthday</ion-label>
+          <ion-datetime-button datetime="start-datetime"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime [max]="_18YearsAgo" [(ngModel)]="userInfo.birthday" id="start-datetime"
+                            presentation="date"></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>

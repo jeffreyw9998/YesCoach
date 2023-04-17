@@ -28,7 +28,7 @@ export const routes: Routes = [
       {
         path: 'hydration',
         canActivate: [canActivateHome],
-        loadComponent: () => import('../nutrition/hydration.component').then(m => m.Hydration)
+        loadComponent: () => import('../hydration/hydration.component').then(m => m.Hydration)
       },
       {
         path: 'profile',

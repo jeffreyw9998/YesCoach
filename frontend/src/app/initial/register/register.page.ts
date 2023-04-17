@@ -16,9 +16,21 @@ import {ApiService} from "../../services/apiservice/api.service";
 export class RegisterPage implements OnInit {
 
 
+  get _18YearsAgo() {
+    const today = new Date();
+    const year = today.getFullYear() - 18;
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    return new Date(`${year}-${month}-${day}`).toISOString();
+  }
+
+
   public userInfo = {
     name: this.gAuth.user!.displayName,
     email: this.gAuth.user!.email,
+    height: 20,
+    weight: 7,
+    birthday: '',
   }
 
   constructor(private gAuth: GoogleService,
@@ -28,20 +40,22 @@ export class RegisterPage implements OnInit {
   }
 
   ngOnInit() {
+    this.userInfo.birthday = this._18YearsAgo;
   }
 
 
   register() {
-    this.apiService.register(this.userInfo).subscribe({
+    console.log(this.userInfo);
+    this.apiService.register(this.userInfo, this.gAuth.user!.uid).subscribe({
       next: (data) => {
         this.router.navigate(['/']).then(r => {
           console.log(r);
         })
       },
       error: (error) => {
+        this.gAuth.signOut().then(() => {});
         this.presentAlert().then(() => {});
       },
-
   })}
 
   get photoUrl() {
@@ -56,7 +70,7 @@ export class RegisterPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'User is registered in database',
       subHeader: 'Subtitle',
-      message: 'Sorry, you have been registered in the database. Please login instead.',
+      message: 'Sorry, you have been registered in the database. Please login again.',
       buttons: ['OK']
     });
 
