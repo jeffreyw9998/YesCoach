@@ -22,4 +22,9 @@ export class StorageService {
     await Preferences.remove({key});
   }
 
+
+  async removeEverything(): Promise<void>{
+      await Preferences.clear();
+  }
+
 }

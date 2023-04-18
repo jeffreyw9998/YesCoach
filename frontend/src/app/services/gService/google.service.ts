@@ -96,13 +96,12 @@ export class GoogleService {
 
   async signOut() {
     await FirebaseAuthentication.signOut();
-    await this.storage.remove('user');
+    await this.storage.removeEverything();
     this.user = null;
     this.isLoggedIn = false;
   }
 
   async refresh() {
-
   }
 
 

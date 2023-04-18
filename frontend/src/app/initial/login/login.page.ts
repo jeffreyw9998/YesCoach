@@ -28,13 +28,22 @@ export class LoginPage implements OnInit {
     await this.gAuth.signIn();
 
     // Redirect to register page if user is not registered in database
-    if (!this.apiService.userExists(this.gAuth.user!.uid)){
-      await this.router.navigate(['/register']);
-    }
-    else{
-      await this.router.navigate(['/']);
-    }
+
     // Redirect to home otherwise
+    this.apiService.userExists(this.gAuth.user!.uid).subscribe((exist: boolean) => {
+      if (exist) {
+        this.router.navigate(['/']).then(r => {
+          console.log(r);
+        })
+      } else {
+        this.router.navigate(['/register']).then(r => {
+          console.log(r);
+        })
+      }
+    });
+
+
+
   }
 
 

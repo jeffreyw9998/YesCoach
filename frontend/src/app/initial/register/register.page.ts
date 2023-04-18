@@ -48,14 +48,8 @@ export class RegisterPage implements OnInit {
     console.log(this.userInfo);
     this.apiService.register(this.userInfo, this.gAuth.user!.uid).subscribe({
       next: (data) => {
-        this.router.navigate(['/']).then(r => {
-          console.log(r);
-        })
-      },
-      error: (error) => {
-        this.gAuth.signOut().then(() => {});
-        this.presentAlert().then(() => {});
-      },
+        this.router.navigate(['/']).then(() => {})
+      }
   })}
 
   get photoUrl() {

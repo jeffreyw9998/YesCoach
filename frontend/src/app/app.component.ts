@@ -14,8 +14,7 @@ import {Router} from "@angular/router";
 export class AppComponent {
   public environmentInjector = inject(EnvironmentInjector);
 
-  constructor(private readonly googleAuthService: GoogleService,
-              private readonly router: Router) {
+  constructor(private readonly googleAuthService: GoogleService) {
     googleAuthService.initialize().then(() => {
       console.log('GoogleAuth initialized.')
     });
