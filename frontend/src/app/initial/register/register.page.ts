@@ -5,6 +5,8 @@ import {AlertController, IonicModule} from '@ionic/angular';
 import {GoogleService} from "../../services/gService/google.service";
 import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
+import {UserInfo, UserInfoForm} from "../../types/userInfo";
+import {StorageService} from "../../services/storage/storage.service";
 
 @Component({
   selector: 'app-register',
@@ -25,18 +27,21 @@ export class RegisterPage implements OnInit {
   }
 
 
-  public userInfo = {
-    name: this.gAuth.user!.displayName,
-    email: this.gAuth.user!.email,
+  public userInfo: UserInfoForm = {
+    id: this.gAuth.user!.uid,
+    name: this.gAuth.user!.displayName as string,
+    email: this.gAuth.user!.email as string,
     height: 20,
     weight: 7,
     birthday: '',
+    password: 'Somerandompassword'
   }
 
   constructor(private gAuth: GoogleService,
               private apiService: ApiService,
               private router: Router,
-              private alertController: AlertController){
+              private alertController: AlertController,
+              private storage: StorageService){
   }
 
   ngOnInit() {
@@ -45,10 +50,13 @@ export class RegisterPage implements OnInit {
 
 
   register() {
-    console.log(this.userInfo);
-    this.apiService.register(this.userInfo, this.gAuth.user!.uid).subscribe({
-      next: (data) => {
+    this.apiService.register(this.userInfo).subscribe({
+      next: (data: UserInfo) => {
+        this.storage.set('userInfo', JSON.stringify(data)).then(() => {})
         this.router.navigate(['/']).then(() => {})
+      },
+      error: (err) => {
+        this.presentAlert().then(() => {});
       }
   })}
 

@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {IonicModule} from '@ionic/angular';
 import {GoogleService} from "../../services/gService/google.service";
-import {Observable, Subject} from "rxjs";
 import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
+import firebase from "firebase/compat";
+import UserInfo = firebase.UserInfo;
+import {StorageService} from "../../services/storage/storage.service";
 
 @Component({
   selector: 'app-login',
@@ -18,41 +20,38 @@ export class LoginPage implements OnInit {
 
   constructor(private gAuth: GoogleService,
               private readonly router: Router,
-              private readonly apiService: ApiService) { }
+              private readonly apiService: ApiService,
+              private readonly storage: StorageService) {
+  }
 
   ngOnInit() {
   }
 
 
-  async signInWithGoogle(){
+  async signInWithGoogle() {
     await this.gAuth.signIn();
 
-    // Redirect to register page if user is not registered in database
-
-    // Redirect to home otherwise
-    this.apiService.userExists(this.gAuth.user!.uid).subscribe((exist: boolean) => {
-      if (exist) {
-        this.router.navigate(['/']).then(r => {
-          console.log(r);
-        })
-      } else {
-        this.router.navigate(['/register']).then(r => {
-          console.log(r);
-        })
+    this.apiService.getUserInfo(this.gAuth.user!.uid).subscribe({
+      next: (data) => {
+        // Redirect to home otherwise
+        this.storage.set('userInfo', JSON.stringify(data)).then(() => {});
+        this.router.navigate(['/']).then(() => {});
+      } ,
+      error: (error) => {
+        // Redirect to register page if user is not registered in database
+        this.router.navigate(['/register']).then(() => {});
       }
-    });
-
-
+    })
 
   }
 
 
-  async refresh(){
+  async refresh() {
     await this.gAuth.refresh();
   }
 
 
-  async signOut(){
+  async signOut() {
     await this.gAuth.signOut();
   }
 }

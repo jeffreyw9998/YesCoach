@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {catchError, map, Observable, of} from "rxjs";
 import {StorageService} from "../storage/storage.service";
 import {environment} from "../../../environments/environment";
-import {UserInfo} from "../../types/userInfo";
+import {UserInfo, UserInfoForm} from "../../types/userInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -33,18 +33,8 @@ export class ApiService {
     )
   }
 
-  register(userInfo: any, user_id: string): Observable<UserInfo | { message: string }> {
-    this.storage.set('userInfo', JSON.stringify(userInfo)).then(() => {
-    });
-
-    userInfo.id = user_id;
-    userInfo.password = 'somerandompassword';
-    console.log(userInfo)
+  register(userInfo: UserInfoForm): Observable<UserInfo> {
     return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo),
-      {headers: new HttpHeaders().set('accept', 'application/json').set('Content-Type', 'application/json')}).pipe(
-      catchError((err) => {
-        return of({message: err.detail})
-      })
-    );
+      {headers: new HttpHeaders().set('accept', 'application/json').set('Content-Type', 'application/json')});
   }
 }

@@ -17,7 +17,6 @@ interface GoogleUser extends User {
 })
 export class GoogleService {
 
-  userSubject = new Subject<any>();
   user: GoogleUser | null = null;
   baseUrl = 'https://www.googleapis.com/fitness/v1/users/me';
   headers = new HttpHeaders().set('Content-Type', 'application/json;encoding=utf-8')
