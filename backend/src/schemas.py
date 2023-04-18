@@ -20,14 +20,14 @@ class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
-    id: int
+    id: str
     password: str
     weight: float
     height: float
     age: int
 
 class User(UserBase):
-    id: int
+    id: str
     weight: Optional[float] = None
     height: Optional[float] = None
     age: Optional[int] = None

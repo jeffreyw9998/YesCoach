@@ -6,10 +6,7 @@ from src import models, crud, schemas
 from src.database import SessionLocal, engine
 
 from sqlalchemy.orm import Session
-
-from starlette.responses import HTMLResponse
-from starlette.requests import Request
-
+import uvicorn
 
 
 # create the database table if they do not already exist?
@@ -44,8 +41,17 @@ def create_user(user: schemas.UserCreate,
 
 
 @app.get("/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(get_db)):
+def read_user(user_id: str, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+
+@app.get("/")
+def home():
+    return {"message": "What's up coach"}
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", reload=True)

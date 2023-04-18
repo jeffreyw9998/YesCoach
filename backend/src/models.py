@@ -9,14 +9,14 @@ from .database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     weight = Column(Float, nullable=False)
     height = Column(Float, nullable=False)
     age = Column(Integer, nullable=False)
 
-    goals = Column(ARRAY(Integer), default=['','',''])
+    goals = Column(ARRAY(String), default=['','',''])
     goals_quantity = Column(ARRAY(Integer), default=[0,0,0])
 
 #     items: Mapped[List["HealthData"]] = relationship(back_populates="users")
