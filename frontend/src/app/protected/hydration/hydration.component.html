@@ -1,9 +1,57 @@
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">Hydration page</ion-title>
+      <ion-title>
+        YesCoach
+      </ion-title>
     </ion-toolbar>
   </ion-header>
+  <div class="main-div">
+    <h1 class="rec-header">Hydration Recommendation</h1>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Drink a Glass of Water by 8:00pm</ion-card-title>
+      </ion-card-header>
 
-  <app-explore-container name="Nutrition page"></app-explore-container>
+      <ion-card-content>
+        So far, you've drank <span class="number">4</span> glasses (12oz) of water today. You need another <span class="number">3</span> to meet your daily recommended level.
+      </ion-card-content>
+    </ion-card>
+
+    
+    <h2>Past Hydration</h2>
+    <div class="past-container">
+      <div class="activity-div">
+        <p>
+          8 glasses of water
+
+        </p>
+        <p class="date">
+          11/02
+        </p>
+
+      </div>
+      <div class="activity-div">
+        <p>
+          8 glasses of water
+
+        </p>
+        <p class="date">
+          11/02
+        </p>
+
+      </div>
+      <div class="activity-div">
+        <p>
+          8 glasses of water
+
+        </p>
+        <p class="date">
+          11/02
+        </p>
+
+      </div>
+    </div>
+  </div>
+
 </ion-content>

@@ -1,6 +1,5 @@
+
 .stat-card {
-    
-    
     outline: #787878 solid 1px;
     border-radius: 0.5rem;
     background-color: rgb(35, 35, 35);
@@ -10,6 +9,9 @@
     height: 100%;
     text-align: center;
 }
+.stat-card, p {
+    font-weight: 400;
+}
 
 .recs {
     margin: 8px;
@@ -17,7 +19,7 @@
 
 .recs-title {
     font-weight: bold;
-    margin-top: 36px;
+    margin-top: 16px;
     font-size: 32px;
 }
 
@@ -30,3 +32,4 @@ p {
     border-bottom: thin solid white;
     padding-top: 12px;
 }
+
