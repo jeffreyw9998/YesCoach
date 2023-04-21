@@ -1,4 +1,3 @@
-
 <ion-content [fullscreen]="true">
   <ion-header [translucent]="true">
     <ion-toolbar>
@@ -8,8 +7,63 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-button (click)="logOut()">
-    Log out
-  </ion-button>
+
+
+<ion-grid class="ion-margin">
+    <ion-row class="ion-justify-content-center ion-padding-bottom">
+      <ion-img [src]="uService.user?.photoUrl" alt="User photo"></ion-img>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-input  label="Name" readonly="true" label-placement="floating" required="true" type="text"
+                     color="primary" [value]="uService.userInfo.name"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-input label="Email" label-placement="floating" type="email" 
+                     readonly="true" color="primary" [value]="uService.userInfo.email"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-input label="Height (inches)" readonly="true" label-placement="floating" type="number" required="true"
+                      min="20" color="primary" [value]="uService.userInfo.height"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Weight (pounds)" readonly="true" label-placement="floating" type="number" required="true"
+                      min="7" color="primary" [value]="uService.userInfo.weight"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Birthday</ion-label>
+          <ion-datetime-button datetime="start-datetime"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime id="start-datetime" readonly="true" 
+                            presentation="date" [value]="uService.userInfo.birthday"></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="logOut()">Log out</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 
 </ion-content>

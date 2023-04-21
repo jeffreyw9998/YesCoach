@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
-import {GoogleService} from "../../services/gService/google.service";
+import {UserService} from "../../services/gService/user.service";
 import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
@@ -28,20 +28,19 @@ export class RegisterPage implements OnInit {
 
 
   public userInfo: UserInfoForm = {
-    id: this.gAuth.user!.uid,
-    name: this.gAuth.user!.displayName as string,
-    email: this.gAuth.user!.email as string,
+    id: this.uService.user!.uid,
+    name: this.uService.user!.displayName as string,
+    email: this.uService.user!.email as string,
     height: 20,
     weight: 7,
     birthday: '',
     password: 'Somerandompassword'
   }
 
-  constructor(private gAuth: GoogleService,
+  constructor(private uService: UserService,
               private apiService: ApiService,
               private router: Router,
-              private alertController: AlertController,
-              private storage: StorageService){
+              private alertController: AlertController){
   }
 
   ngOnInit() {
@@ -52,7 +51,7 @@ export class RegisterPage implements OnInit {
   register() {
     this.apiService.register(this.userInfo).subscribe({
       next: (data: UserInfo) => {
-        this.storage.set('userInfo', JSON.stringify(data)).then(() => {})
+        this.uService.userInfo = data;
         this.router.navigate(['/']).then(() => {})
       },
       error: (err) => {
@@ -61,10 +60,10 @@ export class RegisterPage implements OnInit {
   })}
 
   get photoUrl() {
-    if (this.gAuth.user === null) {
-      return null
+    if (this.uService.user === null) {
+      return '';
     }
-    return this.gAuth.user.photoUrl;
+    return this.uService.user.photoUrl;
   }
 
 

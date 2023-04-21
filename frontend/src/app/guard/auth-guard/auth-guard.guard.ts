@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import { Observable } from 'rxjs';
-import {GoogleService} from "../../services/gService/google.service";
+import {UserService} from "../../services/gService/user.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import {GoogleService} from "../../services/gService/google.service";
  class AuthGuard {
 
 
-  constructor(private gAuth: GoogleService, private  router: Router) {
+  constructor(private gAuth: UserService, private  router: Router) {
   }
   canActivate(
     route: ActivatedRouteSnapshot,

@@ -1,11 +1,10 @@
 import {Injectable, NgZone} from '@angular/core';
 import {Platform} from "@ionic/angular";
 import {StorageService} from "../storage/storage.service";
-import {Observable, Subject} from "rxjs";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {AuthCredential, FirebaseAuthentication, User} from "@capacitor-firebase/authentication";
 import {initializeApp} from "firebase/app";
 import {environment} from "../../../environments/environment";
+import { UserInfo } from 'app/types/userInfo';
 
 interface GoogleUser extends User {
   authentication: AuthCredential;
@@ -15,13 +14,12 @@ interface GoogleUser extends User {
 @Injectable({
   providedIn: 'root',
 })
-export class GoogleService {
+export class UserService {
 
   user: GoogleUser | null = null;
-  baseUrl = 'https://www.googleapis.com/fitness/v1/users/me';
-  headers = new HttpHeaders().set('Content-Type', 'application/json;encoding=utf-8')
   isLoggedIn = false;
-  constructor(private storage: StorageService, private http: HttpClient, private readonly platform: Platform,
+  private dbUserInfo: UserInfo | null = null;
+  constructor(private storage: StorageService, private readonly platform: Platform,
               private readonly ngZone: NgZone) {
     FirebaseAuthentication.removeAllListeners().then(() => {
       FirebaseAuthentication.addListener('authStateChange', (change) => {
@@ -54,10 +52,26 @@ export class GoogleService {
         this.isLoggedIn = true;
       }
     }
+
+    if (this.userInfo === null) {
+      const userInfo = await this.storage.get('userInfo');
+      if (typeof userInfo === "string") {
+        this.dbUserInfo = JSON.parse(userInfo) as UserInfo;
+      }
+    }
   }
 
+  get userInfo(){
+    return this.dbUserInfo as UserInfo;
+  }
+
+  set userInfo(userInfo: UserInfo) {
+    this.storage.set('userInfo', JSON.stringify(userInfo)).then(() => {})
+    this.dbUserInfo = userInfo;
+  }
+
+
   async signIn() {
-    // this.user =
 
     // Save user in storage
     const result = await FirebaseAuthentication.signInWithGoogle(
@@ -88,8 +102,6 @@ export class GoogleService {
 
     await this.storage.set('user', JSON.stringify(this.user));
     this.isLoggedIn = true;
-
-    // If the authorization header is not set, set the authorization header.
   }
 
 
@@ -102,16 +114,5 @@ export class GoogleService {
 
   async refresh() {
   }
-
-
-  getActivities(fromDate: string, toDate: string): Observable<any> {
-    const queryParams = new HttpParams().set('startTime', fromDate).set('endTime', toDate);
-    return this.http.get(`${this.baseUrl}/sessions`, {
-      params: queryParams,
-      headers: this.headers.set('Authorization', `Bearer ${this.user?.authentication.accessToken}`)
-    });
-
-  }
-
 
 }

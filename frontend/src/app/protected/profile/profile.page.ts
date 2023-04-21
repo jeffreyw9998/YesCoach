@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {GoogleService} from "../../services/gService/google.service";
+import {UserService} from "../../services/gService/user.service";
 import {Router} from "@angular/router";
+import { UserInfo } from '../../types/userInfo';
 
 @Component({
   selector: 'app-profile',
@@ -14,14 +15,15 @@ import {Router} from "@angular/router";
 })
 export class ProfilePage implements OnInit {
 
-  constructor(private readonly gAuth: GoogleService,
-              private readonly router: Router) { }
 
+
+  constructor(public readonly uService: UserService,
+              private readonly router: Router) { }
   ngOnInit() {
   }
 
   async logOut(){
-    await this.gAuth.signOut();
+    await this.uService.signOut();
     await this.router.navigate(['/login']);
   }
 }

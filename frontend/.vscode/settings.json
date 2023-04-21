@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "cs125",
+            "connectString": "postgresql://app_user:cs125psql2023@ec2-3-135-241-139.us-east-2.compute.amazonaws.com/cs125"
+        }
+    ]
+}

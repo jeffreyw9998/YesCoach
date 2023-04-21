@@ -7,14 +7,14 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import {GoogleService} from "../../services/gService/google.service";
+import {UserService} from "../../services/gService/user.service";
 
 @Injectable({
   providedIn: 'root'
 })
 class LoginGuard {
 
-  constructor(private gAuth: GoogleService, private router: Router) {
+  constructor(private gAuth: UserService, private router: Router) {
   }
   canActivate(
     route: ActivatedRouteSnapshot,
