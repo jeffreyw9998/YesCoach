@@ -1,16 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {catchError, map, Observable, of} from "rxjs";
-import {StorageService} from "../storage/storage.service";
+import {catchError, concatMap, map, Observable, of} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
+import {Message} from "../../types/message";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  constructor(private http: HttpClient, private storage: StorageService) {
+  headers: HttpHeaders = new HttpHeaders().set('accept', 'application/json').set('Content-Type', 'application/json');
+
+  constructor(private http: HttpClient) {
   }
 
 
@@ -22,19 +24,42 @@ export class ApiService {
   }
 
 
-  userExists(uid: string): Observable<boolean> {
-    return this.getUserInfo(uid).pipe(
-      map((userInfo) => {
-        return true;
-      }),
-      catchError(() => {
-        return of(false);
-      })
-    )
+  updateUser(userData: UserInfo) {
+    return this.http.put<UserInfo>(environment.apiUrl + '/users/' + userData.id, JSON.stringify(userData),
+      {
+        headers: this.headers
+      });
+
   }
 
-  register(userInfo: UserInfoForm): Observable<UserInfo> {
-    return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo),
-      {headers: new HttpHeaders().set('accept', 'application/json').set('Content-Type', 'application/json')});
+  pullUserData(access_token: string, user_id: string) {
+    return this.http.post<Message>(environment.apiUrl + '/activity/' + user_id,
+      JSON.stringify({access_token: access_token}),
+      {
+        headers: this.headers
+      });
+  }
+
+  registerAndPullData(userInfo: UserInfoForm, access_token: string): Observable<any> {
+    return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo), {
+      headers: this.headers
+    }).pipe(
+      concatMap((userInfo) => {
+        return this.pullUserData(access_token, userInfo.id).pipe(
+          map((message: Message) => {
+            if (message.detail.startsWith("Successfully")) {
+              return userInfo;
+            } else {
+              throw new Error(message.detail);
+            }
+          })
+        );
+      }),
+      concatMap((userInfo) => {
+        userInfo.last_update = new Date().toISOString();
+        return this.updateUser(userInfo);
+      })
+    );
+
   }
 }

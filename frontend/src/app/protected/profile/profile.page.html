@@ -11,7 +11,7 @@
 
 <ion-grid class="ion-margin">
     <ion-row class="ion-justify-content-center ion-padding-bottom">
-      <ion-img [src]="uService.user?.photoUrl" alt="User photo"></ion-img>
+      <img [src]="uService.user?.photoUrl" referrerpolicy="no-referrer" alt="User photo"/>
     </ion-row>
     <ion-row>
       <ion-col size="12">
@@ -24,7 +24,7 @@
     <ion-row>
       <ion-col size="12">
         <ion-item>
-          <ion-input label="Email" label-placement="floating" type="email" 
+          <ion-input label="Email" label-placement="floating" type="email"
                      readonly="true" color="primary" [value]="uService.userInfo.email"></ion-input>
         </ion-item>
       </ion-col>
@@ -50,7 +50,7 @@
           <ion-datetime-button datetime="start-datetime"></ion-datetime-button>
           <ion-modal [keepContentsMounted]="true">
             <ng-template>
-              <ion-datetime id="start-datetime" readonly="true" 
+              <ion-datetime id="start-datetime" readonly="true"
                             presentation="date" [value]="uService.userInfo.birthday"></ion-datetime>
             </ng-template>
           </ion-modal>

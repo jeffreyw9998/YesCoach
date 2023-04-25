@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
@@ -7,13 +7,14 @@ import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {StorageService} from "../../services/storage/storage.service";
+import {Message} from "../../types/message";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, NgOptimizedImage]
 })
 export class RegisterPage implements OnInit {
 
@@ -34,7 +35,6 @@ export class RegisterPage implements OnInit {
     height: 20,
     weight: 7,
     birthday: '',
-    password: 'Somerandompassword'
   }
 
   constructor(private uService: UserService,
@@ -49,14 +49,15 @@ export class RegisterPage implements OnInit {
 
 
   register() {
-    this.apiService.register(this.userInfo).subscribe({
+    this.apiService.registerAndPullData(this.userInfo, this.uService.user?.authentication.accessToken!).subscribe({
       next: (data: UserInfo) => {
         this.uService.userInfo = data;
-        this.router.navigate(['/']).then(() => {})
+        this.router.navigate(['/']).then(() => {});
       },
       error: (err) => {
-        this.presentAlert().then(() => {});
-      }
+        console.log(err)
+        this.presentAlert(err).then(() => {});
+      },
   })}
 
   get photoUrl() {
@@ -67,18 +68,16 @@ export class RegisterPage implements OnInit {
   }
 
 
-  async presentAlert() {
+  async presentAlert(err: Message) {
     const alert = await this.alertController.create({
       header: 'User is registered in database',
       subHeader: 'Subtitle',
-      message: 'Sorry, you have been registered in the database. Please login again.',
+      message: `${err.detail}`,
       buttons: ['OK']
     });
 
+    await this.uService.signOut()
     await alert.present();
-    this.router.navigate(['/login']).then(r => {
-      console.log(r);
-    })
-
+    await this.router.navigate(['/login'])
   }
 }
