@@ -8,6 +8,7 @@ import {ApiService} from "../../services/apiservice/api.service";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {StorageService} from "../../services/storage/storage.service";
 import {Message} from "../../types/message";
+import {Option} from "../../types/option";
 
 @Component({
   selector: 'app-register',
@@ -49,7 +50,14 @@ export class RegisterPage implements OnInit {
 
 
   register() {
-    this.apiService.registerAndPullData(this.userInfo, this.uService.user?.authentication.accessToken!).subscribe({
+    const option: Option = {
+      access_token: this.uService.user!.authentication.accessToken!,
+      // pullCalories: true,
+      // pullHydration: true,
+      // pullSteps: true,
+      // pullSleepFitness: true,
+    }
+    this.apiService.registerAndPullData(this.userInfo, option).subscribe({
       next: (data: UserInfo) => {
         this.uService.userInfo = data;
         this.router.navigate(['/']).then(() => {});

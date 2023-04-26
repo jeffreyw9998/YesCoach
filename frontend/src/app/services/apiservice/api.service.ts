@@ -4,6 +4,7 @@ import {catchError, concatMap, map, Observable, of} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {Message} from "../../types/message";
+import {Option} from "../../types/option";
 
 @Injectable({
   providedIn: 'root'
@@ -32,20 +33,20 @@ export class ApiService {
 
   }
 
-  pullUserData(access_token: string, user_id: string) {
+  pullUserData(user_id: string, option: Option) {
     return this.http.post<Message>(environment.apiUrl + '/activity/' + user_id,
-      JSON.stringify({access_token: access_token}),
+      JSON.stringify(option),
       {
         headers: this.headers
       });
   }
 
-  registerAndPullData(userInfo: UserInfoForm, access_token: string): Observable<any> {
+  registerAndPullData(userInfo: UserInfoForm, option: Option): Observable<any> {
     return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo), {
       headers: this.headers
     }).pipe(
       concatMap((userInfo) => {
-        return this.pullUserData(access_token, userInfo.id).pipe(
+        return this.pullUserData(userInfo.id, option).pipe(
           map((message: Message) => {
             if (message.detail.startsWith("Successfully")) {
               return userInfo;
