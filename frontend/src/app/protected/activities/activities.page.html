@@ -1,18 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      YesCoach
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">Activities</ion-title>
+      <ion-title>
+        YesCoach
+      </ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"  
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+  
   <div class="main-div">
     <h1 class="rec-header">Recommended Activity</h1>
     <ion-card>
