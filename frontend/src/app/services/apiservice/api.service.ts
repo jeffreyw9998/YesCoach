@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {catchError, concatMap, map, Observable, of} from "rxjs";
+import {concatMap, map, Observable, of} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {Message} from "../../types/message";
@@ -41,7 +41,7 @@ export class ApiService {
       });
   }
 
-  registerAndPullData(userInfo: UserInfoForm, option: Option): Observable<any> {
+  registerAndPullData(userInfo: UserInfoForm, option: Option): Observable<UserInfo> {
     return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo), {
       headers: this.headers
     }).pipe(
@@ -61,6 +61,10 @@ export class ApiService {
         return this.updateUser(userInfo);
       })
     );
+  }
 
+
+  getStatsAndPullData(user_id: string, option: Option): Observable<any> {
+    return of(1);
   }
 }

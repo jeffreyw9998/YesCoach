@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title size="large">YesCoach</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="recs">
+    <h1 class="rec-header">
+      {{name}}'s goals
+    </h1>
+  </div>
+
+  <ion-grid class="recs">
+    <ion-row>
+       <h3 class="rec-header">Fitness goal</h3>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-select [(ngModel)]="goals[0]">
+            <ion-select-option value="muscles">Gain muscles</ion-select-option>
+            <ion-select-option value="weight">Lose weight</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-item>
+          <ion-input label="Weight gain/loss (lbs)" label-placement="floating" type="number" required="true"
+                     min="0" color="primary" [(ngModel)]="goals_quantity[0]"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <h3 class="rec-header">Sleep goal</h3>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-input label="Hours of sleep per day" label-placement="floating" type="number" required="true"
+                     min="0" color="primary" [(ngModel)]="goals_quantity[1]"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <h3 class="rec-header">Hydration goal</h3>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-input label="Liters of waters drank per day" label-placement="floating" type="number" required="true"
+                     min="0" color="primary" [(ngModel)]="goals_quantity[2]"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" (click)="setGoals()">Set Goals</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

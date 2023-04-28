@@ -25,7 +25,7 @@ import {UserService} from "../../services/gService/user.service";
 
 }
 
-export const canActivateHome: CanActivateFn =
+export const canActiveProtected: CanActivateFn =
   (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     return inject(AuthGuard).canActivate(route,state);
   };

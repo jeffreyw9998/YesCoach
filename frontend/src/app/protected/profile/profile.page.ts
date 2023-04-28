@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import { UserInfo } from '../../types/userInfo';
 
 @Component({
@@ -11,7 +11,7 @@ import { UserInfo } from '../../types/userInfo';
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, RouterLink]
 })
 export class ProfilePage implements OnInit {
 

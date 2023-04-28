@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 
@@ -9,13 +9,25 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   standalone: true,
   imports: [IonicModule, ExploreContainerComponent],
 })
-export class HomePage {
+export class HomePage implements OnInit{
+
+
+  basicStats = {
+    steps: 0,
+    miles: 0,
+    sleepHours: 0,
+    burnedCalories: 0,
+  }
+
+  ngOnInit(): void {
+    // Load data here
+  }
   constructor() {}
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
       event.target.complete();
-    }, 2000);
+    }, 500);
   };
-  
+
 }

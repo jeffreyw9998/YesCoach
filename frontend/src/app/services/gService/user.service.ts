@@ -61,8 +61,9 @@ export class UserService {
     }
   }
 
-  get userInfo(){
-    return this.dbUserInfo as UserInfo;
+  get userInfo(): UserInfo{
+    // Clone userInfo object
+    return JSON.parse(JSON.stringify(this.dbUserInfo));
   }
 
   set userInfo(userInfo: UserInfo) {

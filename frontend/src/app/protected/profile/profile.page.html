@@ -60,7 +60,10 @@
 
     <ion-row>
       <ion-col>
-        <ion-button (click)="logOut()">Log out</ion-button>
+        <a [routerLink]="[ '..','goals']"><ion-button expand="block">Set goals</ion-button></a>
+      </ion-col>
+      <ion-col>
+        <ion-button (click)="logOut()" expand="block">Log out</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

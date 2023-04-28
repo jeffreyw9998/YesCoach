@@ -6,9 +6,8 @@ import {UserService} from "../../services/gService/user.service";
 import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
-import {StorageService} from "../../services/storage/storage.service";
-import {Message} from "../../types/message";
 import {Option} from "../../types/option";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-register',
@@ -41,7 +40,7 @@ export class RegisterPage implements OnInit {
   constructor(private uService: UserService,
               private apiService: ApiService,
               private router: Router,
-              private alertController: AlertController){
+              private alertController: AlertController) {
   }
 
   ngOnInit() {
@@ -60,13 +59,16 @@ export class RegisterPage implements OnInit {
     this.apiService.registerAndPullData(this.userInfo, option).subscribe({
       next: (data: UserInfo) => {
         this.uService.userInfo = data;
-        this.router.navigate(['/']).then(() => {});
+        this.router.navigate(['/']).then(() => {
+        });
       },
       error: (err) => {
         console.log(err)
-        this.presentAlert(err).then(() => {});
+        this.presentAlert(err).then(() => {
+        });
       },
-  })}
+    })
+  }
 
   get photoUrl() {
     if (this.uService.user === null) {
@@ -76,14 +78,12 @@ export class RegisterPage implements OnInit {
   }
 
 
-  async presentAlert(err: Message) {
+  async presentAlert(err: HttpErrorResponse) {
     const alert = await this.alertController.create({
-      header: 'User is registered in database',
-      subHeader: 'Subtitle',
-      message: `${err.detail}`,
+      header: 'Oh no',
+      message: `${err.error.detail || err.statusText}. You will be redirected to the login page`,
       buttons: ['OK']
     });
-
     await this.uService.signOut()
     await alert.present();
     await this.router.navigate(['/login'])

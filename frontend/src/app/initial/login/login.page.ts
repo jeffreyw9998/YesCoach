@@ -5,8 +5,6 @@ import {IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
 import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
-import firebase from "firebase/compat";
-import {StorageService} from "../../services/storage/storage.service";
 
 @Component({
   selector: 'app-login',
