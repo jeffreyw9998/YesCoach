@@ -19,6 +19,7 @@ export class UserService {
   user: GoogleUser | null = null;
   isLoggedIn = false;
   private dbUserInfo: UserInfo | null = null;
+  private nextPullDate: Date | null = null;
   constructor(private storage: StorageService, private readonly platform: Platform,
               private readonly ngZone: NgZone) {
     FirebaseAuthentication.removeAllListeners().then(() => {
@@ -57,8 +58,13 @@ export class UserService {
       const userInfo = await this.storage.get('userInfo');
       if (typeof userInfo === "string") {
         this.dbUserInfo = JSON.parse(userInfo) as UserInfo;
+        const nextPullDate = await this.storage.get('nextPullDate');
+        if (nextPullDate !== null) {
+          this.nextPullDate = new Date(nextPullDate);
+        }
       }
     }
+
   }
 
   get userInfo(): UserInfo{
@@ -71,6 +77,18 @@ export class UserService {
     this.dbUserInfo = userInfo;
   }
 
+  get nextPullDataDate(): Date | null{
+    return this.nextPullDate;
+  }
+
+  set nextPullDataDate(date: Date | null) {
+    if (date === null) {
+      this.storage.remove('nextPullDate').then(() => {});
+    } else {
+      this.storage.set('nextPullDate', date.toISOString()).then(() => {});
+    }
+    this.nextPullDate = date;
+  }
 
   async signIn() {
 
@@ -91,7 +109,8 @@ export class UserService {
           'https://www.googleapis.com/auth/calendar.events',
           'https://www.googleapis.com/auth/calendar.events.readonly',
           'https://www.googleapis.com/auth/calendar.settings.readonly',
-          'https://www.googleapis.com/auth/calendar.freebusy'
+          'https://www.googleapis.com/auth/calendar.freebusy',
+          'https://www.googleapis.com/auth/fitness.location.read'
         ], customParameters: [{
           key: 'returnSecureToken',
           value: 'true'
@@ -104,6 +123,8 @@ export class UserService {
     await this.storage.set('user', JSON.stringify(this.user));
     this.isLoggedIn = true;
   }
+
+
 
 
   async signOut() {

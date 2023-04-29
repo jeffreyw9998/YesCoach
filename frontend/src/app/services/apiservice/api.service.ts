@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {concatMap, map, Observable, of} from "rxjs";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {concatMap, map, Observable, forkJoin} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {Message} from "../../types/message";
-import {Option} from "../../types/option";
+import {GFitOptions, StatOptions} from "../../types/option";
+import {Stats} from "../../types/Stats";
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class ApiService {
 
   }
 
-  pullUserData(user_id: string, option: Option) {
+  pullUserData(user_id: string, option: GFitOptions) {
     return this.http.post<Message>(environment.apiUrl + '/activity/' + user_id,
       JSON.stringify(option),
       {
@@ -41,7 +42,7 @@ export class ApiService {
       });
   }
 
-  registerAndPullData(userInfo: UserInfoForm, option: Option): Observable<UserInfo> {
+  registerAndPullData(userInfo: UserInfoForm, option: GFitOptions): Observable<UserInfo> {
     return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo), {
       headers: this.headers
     }).pipe(
@@ -63,8 +64,50 @@ export class ApiService {
     );
   }
 
+  getStats(user_id: string, option: StatOptions): Observable<Stats> {
 
-  getStatsAndPullData(user_id: string, option: Option): Observable<any> {
-    return of(1);
+    let params = new HttpParams();
+    params = params.set('start_time', option.start_time);
+    params = params.set('end_time', option.end_time);
+    // For which_tables and aggregate_types, we need to append each element to the params
+    for (let table of option.which_tables) {
+      params = params.append('which_tables', table);
+    }
+    for (let type of option.aggregate_types) {
+      params = params.append('aggregate_types', type);
+    }
+    if (option.summarize !== undefined){
+      params = params.append('summarize', 'true');
+    }
+
+    return this.http.get<Stats>(environment.apiUrl + '/activity/' + user_id,
+      {
+        headers: this.headers,
+        params: params
+      });
   }
+
+
+  pullDataAndGetData(user: UserInfo, postOption: GFitOptions, getOption: StatOptions): Observable<[Stats, UserInfo]>{
+      return this.pullUserData(user.id, postOption).pipe(
+        map((message: Message) => {
+          if (message.detail.startsWith("Successfully")) {
+            return "Success";
+          } else {
+            return message.detail;
+          }
+        }),
+        // Call getStats and updateUsers in parallel
+        concatMap( (message: string) => {
+          if (message != "Success") {
+            throw new Error(message);
+          }
+          else{
+            user.last_update = new Date().toISOString();
+           return forkJoin([this.getStats(user.id, getOption), this.updateUser(user)])
+          }
+        })
+      );
+  }
+
 }

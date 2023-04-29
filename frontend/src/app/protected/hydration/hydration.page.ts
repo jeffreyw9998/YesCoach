@@ -1,19 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { Component, OnInit } from '@angular/core';
+import {IonicModule} from "@ionic/angular";
+import {ExploreContainerComponent} from "../explore-container/explore-container.component";
+import {GFitOptions, StatOptions} from "../../types/option";
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
-import {GFitOptions, StatOptions} from "../../types/option";
 import {get24HoursAgoDate} from "../../services/util/util";
 
 @Component({
-  selector: 'app-activities',
-  templateUrl: 'activities.page.html',
-  styleUrls: ['activities.page.scss'],
+  selector: 'app-hydration',
+  templateUrl: './hydration.page.html',
+  styleUrls: ['./hydration.page.scss'],
   standalone: true,
   imports: [IonicModule, ExploreContainerComponent]
 })
-export class ActivitiesPage implements OnInit{
+export class Hydration implements OnInit {
+
+  // @ts-ignore
   userInfo = this.uService.userInfo;
   postOption: GFitOptions = {
     access_token: this.uService.user!.authentication.accessToken!,
@@ -28,12 +30,9 @@ export class ActivitiesPage implements OnInit{
     start_time: this.startDate.toISOString(),
     which_tables: ['fitness'],
     aggregate_types: [''],
-  }
-  ngOnInit() {
-    this._getBasicStats();
+    summarize: false
   }
 
-  constructor(private uService: UserService, private apiService: ApiService) {}
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
@@ -41,6 +40,10 @@ export class ActivitiesPage implements OnInit{
       event.target.complete();
     }, 50);
   };
+
+  ngOnInit() {}
+
+  constructor(private uService: UserService, private apiService: ApiService) {}
 
   private _getBasicStats(){
     const nextPullDate = this.uService.nextPullDataDate;

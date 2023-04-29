@@ -9,12 +9,12 @@ import {UserService} from "../../services/gService/user.service";
  class AuthGuard {
 
 
-  constructor(private gAuth: UserService, private  router: Router) {
+  constructor(private uService: UserService, private  router: Router) {
   }
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!this.gAuth.isLoggedIn){
+    if (!this.uService.isLoggedIn && this.uService.userInfo === null){
       return this.router.parseUrl("/login")
     }
     else{

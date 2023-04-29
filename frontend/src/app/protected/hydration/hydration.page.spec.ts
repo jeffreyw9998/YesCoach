@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { Hydration } from './hydration.component';
+import { Hydration } from './hydration.page';
 
 describe('NutritionComponent', () => {
   let component: Hydration;

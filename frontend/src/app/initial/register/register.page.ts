@@ -6,7 +6,7 @@ import {UserService} from "../../services/gService/user.service";
 import {Router} from "@angular/router";
 import {ApiService} from "../../services/apiservice/api.service";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
-import {Option} from "../../types/option";
+import {GFitOptions} from "../../types/option";
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
@@ -49,7 +49,7 @@ export class RegisterPage implements OnInit {
 
 
   register() {
-    const option: Option = {
+    const option: GFitOptions = {
       access_token: this.uService.user!.authentication.accessToken!,
       // pullCalories: true,
       // pullHydration: true,
@@ -59,6 +59,9 @@ export class RegisterPage implements OnInit {
     this.apiService.registerAndPullData(this.userInfo, option).subscribe({
       next: (data: UserInfo) => {
         this.uService.userInfo = data;
+        // next pullDataDate is tomorrow
+        const today = new Date();
+        this.uService.nextPullDataDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
         this.router.navigate(['/']).then(() => {
         });
       },

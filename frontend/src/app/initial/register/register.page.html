@@ -49,10 +49,10 @@
       <ion-col>
         <ion-item>
           <ion-label>Birthday</ion-label>
-          <ion-datetime-button datetime="start-datetime"></ion-datetime-button>
+          <ion-datetime-button datetime="birth-datetime"></ion-datetime-button>
           <ion-modal [keepContentsMounted]="true">
             <ng-template>
-              <ion-datetime [max]="_18YearsAgo" [(ngModel)]="userInfo.birthday" id="start-datetime"
+              <ion-datetime [max]="_18YearsAgo" [(ngModel)]="userInfo.birthday" id="birth-datetime"
                             presentation="date"></ion-datetime>
             </ng-template>
           </ion-modal>

@@ -1,6 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import {IonicModule} from '@ionic/angular';
+import {ExploreContainerComponent} from '../explore-container/explore-container.component';
+import {UserService} from "../../services/gService/user.service";
+import {ApiService} from "../../services/apiservice/api.service";
+import {GFitOptions, StatOptions} from "../../types/option";
+import {get24HoursAgoDate} from "../../services/util/util";
+import {Stats} from "../../types/Stats";
 
 @Component({
   selector: 'app-home',
@@ -9,25 +14,80 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   standalone: true,
   imports: [IonicModule, ExploreContainerComponent],
 })
-export class HomePage implements OnInit{
+export class HomePage implements OnInit {
 
 
   basicStats = {
-    steps: 0,
-    miles: 0,
-    sleepHours: 0,
-    burnedCalories: 0,
+    steps: "0",
+    distance: "0",
+    sleepHours: "0",
+    burnedCalories: "0",
+  }
+
+  userInfo = this.uService.userInfo;
+  postOption: GFitOptions = {
+    access_token: this.uService.user!.authentication.accessToken!,
+  }
+  // Date object 24 hours ago
+  curDate = new Date();
+
+  startDate = get24HoursAgoDate(this.curDate);
+
+
+  getOption: StatOptions = {
+    end_time: this.curDate.toISOString(),
+    start_time: this.startDate.toISOString(),
+    which_tables: ['aggregate', 'sleep'],
+    aggregate_types: ['steps', 'calories', 'distance'],
+    summarize: true,
   }
 
   ngOnInit(): void {
-    // Load data here
+    this._getBasicStats();
   }
-  constructor() {}
+
+  parseBasicStats(stats: Stats){
+
+    const sleepSession = stats.sleep.at(-1)
+    const sleepStart = new Date(sleepSession.startTime)
+    const sleepEnd = new Date(sleepSession.endTime)
+    const sleepHours = ((sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60 /60).toFixed(2)
+
+    return {
+      burnedCalories : (stats.aggregate[0].sum).toFixed(2),
+      distance : (stats.aggregate[1].sum).toFixed(2),
+      steps : (stats.aggregate[2].sum).toFixed(2),
+      sleepHours : sleepHours
+    }
+  }
+
+  private _getBasicStats() {
+    const nextPullDate = this.uService.nextPullDataDate;
+    if (nextPullDate === null || nextPullDate.getTime() < Date.now()) {
+      // Next pull date is next day
+      this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 24 * 60 * 60 * 1000);
+      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
+
+        this.basicStats = this.parseBasicStats(stats);
+        this.uService.userInfo = newUser;
+      })
+    } else {
+      this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
+        console.log(stats);
+        this.basicStats = this.parseBasicStats(stats);
+      });
+    }
+  }
+
+  constructor(private uService: UserService, private apiService: ApiService) {
+  }
+
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
+      this._getBasicStats();
       event.target.complete();
-    }, 500);
+    }, 50);
   };
 
 }
