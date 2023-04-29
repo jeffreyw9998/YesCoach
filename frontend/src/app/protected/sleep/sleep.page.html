@@ -9,7 +9,7 @@
 
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"  
+      pullingIcon="chevron-down-circle-outline"
       refreshingSpinner="circles">
     </ion-refresher-content>
   </ion-refresher>
@@ -28,37 +28,15 @@
       </div>
     </div>
 
-    <h2>Past Slumbers</h2>
+    <h2>Slumbers in the past week</h2>
     <div class="past-container">
-      <div class="activity-div">
+      <div class="activity-div" *ngFor="let slumber of slumbers">
         <p>
-          11:30pm - 7:20am
-
+          {{slumber.start}} - {{slumber.end}}
         </p>
         <p class="date">
-          11/02
+          {{slumber.date}}
         </p>
-
-      </div>
-      <div class="activity-div">
-        <p>
-          11:30pm - 7:20am
-
-        </p>
-        <p class="date">
-          11/02
-        </p>
-
-      </div>
-      <div class="activity-div">
-        <p>
-          11:30pm - 7:20am
-
-        </p>
-        <p class="date">
-          11/02
-        </p>
-
       </div>
     </div>
   </div>

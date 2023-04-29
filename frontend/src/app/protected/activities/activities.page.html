@@ -9,11 +9,11 @@
 
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"  
+      pullingIcon="chevron-down-circle-outline"
       refreshingSpinner="circles">
     </ion-refresher-content>
   </ion-refresher>
-  
+
   <div class="main-div">
     <h1 class="rec-header">Recommended Activity</h1>
     <ion-card>
@@ -27,37 +27,15 @@
       </ion-card-content>
     </ion-card>
 
-    <h2>Past Activities</h2>
+    <h2>Activities in the past 24 hours</h2>
     <div class="past-container">
-      <div class="activity-div">
+      <div class="activity-div" *ngFor="let activity of activities">
         <p>
-          Tennis for 32 minutes
-
+          {{activity.name}} for {{activity.duration}}
         </p>
         <p class="date">
-          11/02
+          {{activity.date}}
         </p>
-
-      </div>
-      <div class="activity-div">
-        <p>
-          Tennis for 32 minutes
-
-        </p>
-        <p class="date">
-          11/02
-        </p>
-
-      </div>
-      <div class="activity-div">
-        <p>
-          Tennis for 32 minutes
-
-        </p>
-        <p class="date">
-          11/02
-        </p>
-
       </div>
     </div>
   </div>

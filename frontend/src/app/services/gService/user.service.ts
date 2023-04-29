@@ -5,6 +5,7 @@ import {AuthCredential, FirebaseAuthentication, User} from "@capacitor-firebase/
 import {initializeApp} from "firebase/app";
 import {environment} from "../../../environments/environment";
 import { UserInfo } from 'app/types/userInfo';
+import {BehaviorSubject} from "rxjs";
 
 interface GoogleUser extends User {
   authentication: AuthCredential;
@@ -20,18 +21,19 @@ export class UserService {
   isLoggedIn = false;
   private dbUserInfo: UserInfo | null = null;
   private nextPullDate: Date | null = null;
+  userSubject = new BehaviorSubject<User | null>(null);
   constructor(private storage: StorageService, private readonly platform: Platform,
               private readonly ngZone: NgZone) {
     FirebaseAuthentication.removeAllListeners().then(() => {
       FirebaseAuthentication.addListener('authStateChange', (change) => {
         this.ngZone.run(() => {
-          // this.userSubject.next(change.user);
+          this.userSubject.next(change.user);
         });
       });
     });
     // Only needed to support dev livereload.
     FirebaseAuthentication.getCurrentUser().then((result) => {
-      // this.userSubject.next(result.user);
+      this.userSubject.next(result.user);
     });
   }
 
@@ -132,9 +134,7 @@ export class UserService {
     await this.storage.removeEverything();
     this.user = null;
     this.isLoggedIn = false;
-  }
-
-  async refresh() {
+    this.nextPullDataDate = null;
   }
 
 }

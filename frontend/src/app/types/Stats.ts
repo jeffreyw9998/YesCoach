@@ -1,5 +1,4 @@
-
-interface Activity{
+interface BaseActivity {
   user_id: string,
   id: string,
   name?: string
@@ -9,17 +8,17 @@ interface Activity{
   modifiedTime: string
 }
 
-interface FitnessActivity extends Activity{
+interface FitnessActivity extends BaseActivity {
   activityType: number,
   activeTimeSeconds: number,
 }
 
 
-interface SleepActivity extends Activity{
+interface SleepActivity extends BaseActivity {
 
 }
 
-interface Aggregate{
+interface Aggregate {
   aggregate_type: string,
   user_id: string,
   startTime: string,
@@ -28,8 +27,27 @@ interface Aggregate{
 }
 
 
+export interface Slumber {
+  date: string,
+  start: string,
+  end: string,
+}
+
+export interface BasicStats {
+  steps: string,
+  distance: string,
+  sleepHours: string,
+  burnedCalories: string,
+}
+
+export interface SummarizedActivity {
+  name: string,
+  date: string,
+  duration: string,
+}
+
 export type Stats = {
-  'aggregate': Aggregate[] | any,
-  'sleep': SleepActivity[] | any,
-  'fitness_activity': FitnessActivity[] | any,
+  'aggregate': Aggregate[] | Array<any>,
+  'sleep': SleepActivity[] | Array<any>,
+  'fitness': FitnessActivity[] | Array<any>,
 }

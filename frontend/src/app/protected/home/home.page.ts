@@ -5,7 +5,7 @@ import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
 import {GFitOptions, StatOptions} from "../../types/option";
 import {get24HoursAgoDate} from "../../services/util/util";
-import {Stats} from "../../types/Stats";
+import {BasicStats, Stats} from "../../types/Stats";
 
 @Component({
   selector: 'app-home',
@@ -17,7 +17,7 @@ import {Stats} from "../../types/Stats";
 export class HomePage implements OnInit {
 
 
-  basicStats = {
+  basicStats : BasicStats = {
     steps: "0",
     distance: "0",
     sleepHours: "0",
@@ -46,9 +46,9 @@ export class HomePage implements OnInit {
     this._getBasicStats();
   }
 
-  parseBasicStats(stats: Stats){
+  parseBasicStats(stats: Stats): BasicStats{
 
-    const sleepSession = stats.sleep.at(-1)
+    const sleepSession = stats.sleep[stats.sleep.length - 1];
     const sleepStart = new Date(sleepSession.startTime)
     const sleepEnd = new Date(sleepSession.endTime)
     const sleepHours = ((sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60 /60).toFixed(2)
@@ -67,14 +67,16 @@ export class HomePage implements OnInit {
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 24 * 60 * 60 * 1000);
       this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
-
-        this.basicStats = this.parseBasicStats(stats);
+        if (stats.aggregate.length > 0 && stats.sleep.length > 0){
+          this.basicStats = this.parseBasicStats(stats);
+        }
         this.uService.userInfo = newUser;
       })
     } else {
       this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
-        console.log(stats);
-        this.basicStats = this.parseBasicStats(stats);
+        if (stats.aggregate.length > 0 && stats.sleep.length > 0){
+          this.basicStats = this.parseBasicStats(stats);
+        }
       });
     }
   }
