@@ -53,10 +53,14 @@ export class HomePage implements OnInit {
     const sleepEnd = new Date(sleepSession.endTime)
     const sleepHours = ((sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60 /60).toFixed(2)
 
+    const burnedCalories = (stats.aggregate[0] || {sum: 0}).sum;
+    const distance = (stats.aggregate[1] || {sum: 0}).sum;
+    const steps = (stats.aggregate[2] || {sum: 0}).sum;
+
     return {
-      burnedCalories : (stats.aggregate[0].sum).toFixed(2),
-      distance : (stats.aggregate[1].sum).toFixed(2),
-      steps : (stats.aggregate[2].sum).toFixed(2),
+      burnedCalories : burnedCalories.toFixed(2),
+      distance : distance.toFixed(2),
+      steps : steps.toFixed(2),
       sleepHours : sleepHours
     }
   }
