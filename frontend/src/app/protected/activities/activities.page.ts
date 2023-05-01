@@ -77,7 +77,6 @@ export class ActivitiesPage implements OnInit{
         duration: durationString,
       });
     }
-    console.log(activities);
     return activities;
   }
 
@@ -92,7 +91,6 @@ export class ActivitiesPage implements OnInit{
           this.activities = this.parseActivitiesStats(stats);
         }
 
-        console.log(stats);
         this.uService.userInfo = newUser;
       })
     }
@@ -101,7 +99,6 @@ export class ActivitiesPage implements OnInit{
         if (stats.fitness.length > 0){
           this.activities = this.parseActivitiesStats(stats);
         }
-        console.log(stats);
       });
     }
   }

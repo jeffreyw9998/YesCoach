@@ -77,7 +77,7 @@ export class ApiService {
       params = params.append('aggregate_types', type);
     }
     if (option.summarize !== undefined){
-      params = params.append('summarize', 'true');
+      params = params.append('summarize', option.summarize);
     }
 
     return this.http.get<Stats>(environment.apiUrl + '/activity/' + user_id,

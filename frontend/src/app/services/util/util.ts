@@ -47,4 +47,11 @@ function formatTime(time: number) {
   return returnString;
 }
 
-export {getIsoLocalTime, get24HoursAgoDate, get7DaysAgoDate, getTimeFromDate, formatTime};
+function convertLitersToOunces(liters: number) {
+  return liters * 33.814;
+}
+
+export {
+  getIsoLocalTime, get24HoursAgoDate, get7DaysAgoDate, getTimeFromDate, formatTime,
+  convertLitersToOunces
+};

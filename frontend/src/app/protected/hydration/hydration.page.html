@@ -9,7 +9,7 @@
 
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"  
+      pullingIcon="chevron-down-circle-outline"
       refreshingSpinner="circles">
     </ion-refresher-content>
   </ion-refresher>
@@ -26,38 +26,16 @@
       </ion-card-content>
     </ion-card>
 
-    
-    <h2>Past Hydration</h2>
+
+    <h2>Hydration in the past weeks</h2>
     <div class="past-container">
-      <div class="activity-div">
+      <div class="activity-div" *ngFor="let hydration of hydration_history">
         <p>
-          8 glasses of water
-
+            {{hydration.amount}} of water
         </p>
         <p class="date">
-          11/02
+          {{hydration.date}}
         </p>
-
-      </div>
-      <div class="activity-div">
-        <p>
-          8 glasses of water
-
-        </p>
-        <p class="date">
-          11/02
-        </p>
-
-      </div>
-      <div class="activity-div">
-        <p>
-          8 glasses of water
-
-        </p>
-        <p class="date">
-          11/02
-        </p>
-
       </div>
     </div>
   </div>

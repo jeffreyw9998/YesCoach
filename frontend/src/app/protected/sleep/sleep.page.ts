@@ -33,7 +33,8 @@ export class SleepPage implements  OnInit{
     end_time: this.curDate.toISOString(),
     start_time: this.startDate.toISOString(),
     which_tables: ['sleep'],
-    aggregate_types: ['']
+    aggregate_types: [''],
+    summarize: false
   }
 
   slumbers : Slumber[]= [
@@ -97,7 +98,6 @@ export class SleepPage implements  OnInit{
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getFullYear(), this.curDate.getMonth(), this.curDate.getDate() + 1);
       this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
-        console.log(stats);
         if (stats.sleep.length > 0){
             this.slumbers = this.parseSleepStats(stats);
         }
@@ -108,9 +108,7 @@ export class SleepPage implements  OnInit{
       this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
         if (stats.sleep.length > 0){
             this.slumbers = this.parseSleepStats(stats);
-          console.log(this.slumbers);
         }
-        console.log(stats);
       });
     }
   }

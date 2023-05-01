@@ -40,6 +40,11 @@ export interface BasicStats {
   burnedCalories: string,
 }
 
+export interface Water{
+  date: string,
+  amount: string,
+}
+
 export interface SummarizedActivity {
   name: string,
   date: string,
