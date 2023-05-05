@@ -48,7 +48,8 @@ export class ActivitiesPage implements OnInit{
     end_time: this.curDate.toISOString(),
     start_time: this.startDate.toISOString(),
     which_tables: ['fitness'],
-    aggregate_types: [''],
+    aggregate_types: ['something'],
+    summarize: false
   }
   ngOnInit() {
     this._getBasicStats();

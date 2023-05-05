@@ -5,20 +5,16 @@ function getIsoLocalTime(): string {
 
 function get24HoursAgoDate(curDate: Date) {
   const curTimestamp = curDate.getTime();
-  const returnDate = new Date(curTimestamp - 24 * 60 * 60 * 1000);
-
   // Set time to 00:00:00
-  returnDate.setHours(0, 0, 0, 0);
-  return returnDate;
+  // returnDate.setHours(0, 0, 0, 0);
+  return new Date(curTimestamp - 24 * 60 * 60 * 1000);
 }
 
 function get7DaysAgoDate(curDate: Date) {
   const curTimestamp = curDate.getTime();
-  const returnDate = new Date(curTimestamp - 7 * 24 * 60 * 60 * 1000);
-
   // Set time to 00:00:00
-  returnDate.setHours(0, 0, 0, 0);
-  return returnDate;
+  // returnDate.setHours(0, 0, 0, 0);
+  return new Date(curTimestamp - 7 * 24 * 60 * 60 * 1000);
 }
 
 // Get the time of the date in HH:MM:SS format
