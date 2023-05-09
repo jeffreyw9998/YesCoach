@@ -28,13 +28,16 @@ export class GoalsPage implements OnInit {
   ngOnInit() {
     this.name = this.uService.user!.displayName as string;
     this.dbUser = this.uService.userInfo;
-    this.goals = this.dbUser.goals!;
     this.goals_quantity = this.dbUser.goals_quantity!;
   }
 
   setGoals(){
-    this.goals = this.goals.concat(['sleep', 'hydration']);
-    this.dbUser.goals = this.goals;
+
+    if (this.goals.indexOf('sleep') === -1 || this.goals.indexOf('hydration') === -1){
+      this.goals = this.goals.concat(['sleep', 'hydration']);
+    }
+    // Clone the array
+    this.dbUser.goals =  [...this.goals];
     this.dbUser.goals_quantity = this.goals_quantity;
     this.apiService.updateUser(this.dbUser).subscribe({
       next: (newUser: UserInfo) => {
