@@ -17,7 +17,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class GoalsPage implements OnInit {
 
-  goals = ['muscles', 'sleep', 'hydration'];
+  goals = ['muscles'];
   goals_quantity = [0, 0, 0];
   name = '';
   dbUser!: UserInfo;
@@ -33,6 +33,7 @@ export class GoalsPage implements OnInit {
   }
 
   setGoals(){
+    this.goals = this.goals.concat(['sleep', 'hydration']);
     this.dbUser.goals = this.goals;
     this.dbUser.goals_quantity = this.goals_quantity;
     this.apiService.updateUser(this.dbUser).subscribe({
@@ -45,6 +46,9 @@ export class GoalsPage implements OnInit {
         this.presentAlert(err).then(() => {});
       }
     });
+    // Remove sleep and hydration from goals
+    this.goals.pop();
+    this.goals.pop();
   }
 
   async presentAlert(err: HttpErrorResponse | string) {

@@ -4,6 +4,7 @@ export interface GFitOptions {
   pullHydration?: boolean;
   pullSteps?: boolean;
   pullCalories?: boolean;
+  pullDistance?: boolean;
 }
 
 

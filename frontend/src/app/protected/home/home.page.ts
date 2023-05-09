@@ -27,6 +27,11 @@ export class HomePage implements OnInit {
   userInfo = this.uService.userInfo;
   postOption: GFitOptions = {
     access_token: this.uService.user!.authentication.accessToken!,
+    pullSleepFitness: true,
+    pullHydration: true,
+    pullCalories: true,
+    pullDistance: true,
+    pullSteps: true
   }
   // Date object 24 hours ago
   curDate = new Date();

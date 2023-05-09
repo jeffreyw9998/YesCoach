@@ -4,7 +4,7 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
 import {GFitOptions, StatOptions} from "../../types/option";
-import {formatTime, get24HoursAgoDate} from "../../services/util/util";
+import {formatTime} from "../../services/util/util";
 import {integerActivitiesMap} from "../../integerActivitiesMap";
 import {Stats, SummarizedActivity} from "../../types/Stats";
 import {CommonModule} from "@angular/common";
@@ -19,12 +19,17 @@ export class ActivitiesPage implements OnInit{
   userInfo = this.uService.userInfo;
   postOption: GFitOptions = {
     access_token: this.uService.user!.authentication.accessToken!,
+    pullSleepFitness: true,
+    pullHydration: true,
+    pullCalories: true,
+    pullDistance: true,
+    pullSteps: true
   }
   activityMap = integerActivitiesMap;
   // Date object 1 day ago
   curDate = new Date();
 
-  startDate = get24HoursAgoDate(this.curDate);
+  startDate = new Date(this.curDate.getTime() - 24 * 60 * 60 * 1000)
 
   activities: SummarizedActivity[] = [
     {
