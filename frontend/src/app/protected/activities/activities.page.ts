@@ -8,14 +8,21 @@ import {formatTime} from "../../services/util/util";
 import {integerActivitiesMap} from "../../integerActivitiesMap";
 import {Stats, SummarizedActivity} from "../../types/Stats";
 import {CommonModule} from "@angular/common";
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-activities',
   templateUrl: 'activities.page.html',
   styleUrls: ['activities.page.scss'],
   standalone: true,
-  imports: [IonicModule, ExploreContainerComponent, CommonModule]
+  imports: [IonicModule, ExploreContainerComponent, CommonModule, RouterLink]
 })
 export class ActivitiesPage implements OnInit{
+
+  goalIsGainMuscle = false /* api call to see if user's goal is gain muscle or lose weight (set booleans accordingly)*/
+  goalIsLoseWeight = true 
+
+
+
   userInfo = this.uService.userInfo;
   postOption: GFitOptions = {
     access_token: this.uService.user!.authentication.accessToken!,

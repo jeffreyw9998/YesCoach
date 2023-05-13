@@ -45,6 +45,16 @@ export const routes: Routes = [
         redirectTo: '/home',
         pathMatch: 'full',
       },
+      {
+        path: 'muscles',
+        canActivate: [canActiveProtected],
+        loadComponent: () => import('../muscles/muscles.page').then( m => m.Muscles)
+      },
+      {
+        path: 'activity',
+        canActivate: [canActiveProtected],
+        loadComponent: () => import('../activity/activity.page').then( m => m.Activity)
+      },
     ],
   },
 ];

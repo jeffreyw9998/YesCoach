@@ -16,6 +16,10 @@
 
   <div class="main-div">
     <h1 class="rec-header">Recommended Activity</h1>
+    <ion-col>
+      <a *ngIf="goalIsGainMuscle" [routerLink]="[ '..','muscles']"><ion-button expand="block"> Set Desired Muscle Goals</ion-button></a>
+      <a *ngIf="goalIsLoseWeight" [routerLink]="[ '..','activity']"><ion-button expand="block"> Set Preferred Activities</ion-button></a>
+    </ion-col>
     <ion-card>
       <ion-card-header>
         <ion-card-title>Do some weightlifting</ion-card-title>
