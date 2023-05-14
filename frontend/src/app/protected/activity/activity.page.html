@@ -14,7 +14,7 @@
   <ion-list>
     <ion-item>
       <ion-select value="no preference" aria-label="muscles" placeholder="Choose Preferred Activities" [multiple]="true" (ionChange)="handleChange($event)">
-    
+        <ion-select-option value="no preference">No Preference</ion-select-option>
         <ion-select-option value="biking">Biking</ion-select-option>
         <ion-select-option value="walking">Walking</ion-select-option>
         <ion-select-option value="running">Running</ion-select-option>
