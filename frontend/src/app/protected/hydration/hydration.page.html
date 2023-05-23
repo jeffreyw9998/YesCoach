@@ -1,0 +1,41 @@
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>
+        YesCoach
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="main-div">
+    <h1 class="rec-header">Hydration Recommendation</h1>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{analysisComment[0]}}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>{{analysisComment[1]}}</ion-card-content>
+    </ion-card>
+
+
+    <h2>Hydration in the past weeks</h2>
+    <div class="past-container">
+      <div class="activity-div" *ngFor="let hydration of hydration_history">
+        <p>
+            {{hydration.amount}} of water
+        </p>
+        <p class="date">
+          {{hydration.date}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

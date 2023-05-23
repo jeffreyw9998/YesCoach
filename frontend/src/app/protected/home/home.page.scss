@@ -1,0 +1,37 @@
+
+.stat-card {
+    outline: #787878 solid 1px;
+    border-radius: 0.5rem;
+    background-color: rgb(35, 35, 35);
+    color: rgb(218, 84, 31);
+    font-weight: bold;
+    padding: 2px;
+    height: 100%;
+    text-align: center;
+}
+.stat-card, p {
+    font-weight: 400;
+}
+
+//.recs {
+//    margin: 8px;
+
+.recs-title {
+    font-weight: bold;
+    margin-top: 16px;
+    font-size: 32px;
+}
+
+p {
+    color: white;
+}
+
+.stats-title {
+    margin:8px;
+    border-bottom: thin solid white;
+    padding-top: 12px;
+}
+
+.score {
+    font-size: 32px;
+}

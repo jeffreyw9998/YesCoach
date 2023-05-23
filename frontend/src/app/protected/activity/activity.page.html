@@ -1,0 +1,24 @@
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title size="large">YesCoach</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="recs">
+    <h1 class="rec-header">
+      Choose Preferred Activities
+    </h1>
+  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-select value="no preference" aria-label="muscles" placeholder="Choose Preferred Activities" [multiple]="true" (ionChange)="handleChange($event)">
+        <ion-select-option value="no preference">No Preference</ion-select-option>
+        <ion-select-option [value]="activity" *ngFor="let activity of allActivities">{{activity}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-button (click)="save()" expand="block" [disabled]="emptyArray()">Save</ion-button>
+
+</ion-content>

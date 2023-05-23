@@ -1,0 +1,31 @@
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title size="large">YesCoach</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="recs">
+    <h1 class="rec-header">
+      Choose Desired Muscle Groups
+    </h1>
+  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-select value="no preference" aria-label="muscles" placeholder="Select Desired Muscles" [multiple]="true" (ionChange)="handleChange($event)">
+        <ion-select-option value="no preference">No Preference</ion-select-option>
+        <ion-select-option value="chest" >Chest</ion-select-option>
+        <ion-select-option value="back">Back</ion-select-option>
+        <ion-select-option value="shoulders">Shoulders</ion-select-option>
+        <ion-select-option value="biceps">Biceps</ion-select-option>
+        <ion-select-option value="triceps">Triceps</ion-select-option>
+        <ion-select-option value="legs">Legs</ion-select-option>
+        <ion-select-option value="abs">Abs</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-button (click)="save();" expand="block" [disabled]="emptyArray()">Save</ion-button>
+
+
+</ion-content>

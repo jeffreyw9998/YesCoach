@@ -1,0 +1,65 @@
+
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>
+        YesCoach
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+
+  <div class="recs">
+    <h1 class="rec-header">
+      Lifestyle Score
+    </h1>
+
+    <div class="stat-card">
+      <h1>87</h1>
+      <p>You're doing great!</p>
+    </div>
+    
+    
+   
+  </div>
+
+  <h1 class="stats-title">24hr stats</h1>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="stat-card">
+          <h1>{{basicStats.steps}}</h1>
+          <p>Steps Walked</p>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="stat-card">
+          <h1>{{basicStats.distance}}</h1>
+          <p>Miles Walked</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div class="stat-card">
+          <h1>{{basicStats.burnedCalories}}</h1>
+          <p>Calories Burned</p>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="stat-card">
+          <h1>{{basicStats.sleepHours}}</h1>
+          <p>Hours Slept</p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

@@ -1,0 +1,53 @@
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>
+        YesCoach
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="main-div">
+    <h1 class="rec-header">Sleep Recommendation</h1>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{analysisComment[0]}}</ion-card-title>
+        <ion-card-subtitle>{{analysisComment[1]}}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>{{analysisComment[2]}}</ion-card-content>
+    </ion-card>
+
+    <div class="data-div">
+      <div class="data">
+        <h1>{{recommendation.sleep?.next_bed_time}}</h1>
+        <p>Time to Sleep</p>
+      </div>
+      <div class="data">
+        <h1>{{recommendation.sleep?.next_wake_time}}</h1>
+        <p>Time to Wake Up
+        </p>
+      </div>
+    </div>
+
+    <h2>Slumbers in the past week</h2>
+    <div class="past-container">
+      <div class="activity-div" *ngFor="let slumber of slumbers">
+        <p>
+          {{slumber.start}} - {{slumber.end}}
+        </p>
+        <p class="date">
+          {{slumber.date}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,60 @@
+<ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>
+        YesCoach
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="main-div">
+    <h1 class="rec-header">Recommended Activity</h1>
+    <ion-col>
+      <a *ngIf="goalIsGainMuscle" [routerLink]="[ '..','muscles']">
+        <ion-button expand="block"> Set Desired Muscle Goals</ion-button>
+      </a>
+      <a *ngIf="goalIsLoseWeight" [routerLink]="[ '..','activity']">
+        <ion-button expand="block"> Set Preferred Activities</ion-button>
+      </a>
+      <a *ngIf="!goalIsGainMuscle && !goalIsLoseWeight" [routerLink]="['..', 'goals']">
+        <ion-button expand="block">Set goal</ion-button>
+      </a>
+    </ion-col>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{comment}}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ul class="list">
+          <ion-checkbox  *ngFor="let exercise of exerciseList" (ionChange)="handleChange($event, exercise.name)">
+            <a target="_blank" [href]="exercise.url" referrerpolicy="no-referrer" *ngIf="exercise.url !== ''; else activity">{{exercise.name}}</a>
+            <ng-template #activity>
+              {{exercise.name}}
+            </ng-template>
+          </ion-checkbox>
+        </ul>
+      </ion-card-content>
+    </ion-card>
+
+    <h2>Activities in the past 24 hours</h2>
+    <div class="past-container">
+      <div class="activity-div" *ngFor="let activity of activities">
+        <p>
+          {{activity.name}} for {{activity.duration}}
+        </p>
+        <p class="date">
+          {{activity.date}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

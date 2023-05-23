@@ -1,0 +1,68 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">register</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid class="ion-margin">
+    <ion-row class="ion-justify-content-center ion-padding-bottom">
+      <img [src]="photoUrl" referrerpolicy="no-referrer" alt="User photo">
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-input label="Name" label-placement="floating" autocapitalize="words" required="true" type="text"
+                     [(ngModel)]="userInfo.name" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-input label="Email" label-placement="floating" type="email" [(ngModel)]="userInfo.email"
+                     readonly="true" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-input label="Height (inches)" label-placement="floating" type="number" required="true"
+                     [(ngModel)]="userInfo.height" min="20" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Weight (pounds)" label-placement="floating" type="number" required="true"
+                     [(ngModel)]="userInfo.weight" min="7" color="primary"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Birthday</ion-label>
+          <ion-datetime-button datetime="birth-datetime"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime [(ngModel)]="userInfo.birthday" id="birth-datetime"
+                            presentation="date"></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" (click)="register()">Register</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

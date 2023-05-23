@@ -1,0 +1,7 @@
+{
+  "name": "YesCoachFrontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
