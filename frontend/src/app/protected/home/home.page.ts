@@ -6,6 +6,7 @@ import {ApiService} from "../../services/apiservice/api.service";
 import {GFitOptions, StatOptions} from "../../types/option";
 import {get24HoursAgoDate} from "../../services/util/util";
 import {BasicStats, Stats} from "../../types/Stats";
+import {Recommendation} from "../../types/recommendation";
 
 @Component({
   selector: 'app-home',
@@ -47,18 +48,43 @@ export class HomePage implements OnInit {
     summarize: true,
   }
 
+  lifestyleScore = {
+    score: 87,
+    comment: "You are doing great!"
+  }
+
   constructor(private uService: UserService, private apiService: ApiService) {
   }
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
       this._getBasicStats();
+      this._getRecommendation();
       event.target.complete();
     }, 50);
   };
 
   ngOnInit(): void {
     this._getBasicStats();
+    this._getRecommendation();
+  }
+
+  private _getRecommendation(){
+    this.apiService.getRecommendation(this.userInfo.id, ['fitness', 'sleep', 'hydration'], true).subscribe((rec: Recommendation) => {
+      this.lifestyleScore.score =  (rec.sleep?.score || 0 ) + (rec.fitness?.score || 0) + (rec.hydration?.score || 0);
+      this.lifestyleScore.comment = rec.comment || "You are doing great!";
+    });
+  }
+
+
+  get recOption(){
+
+  const curDate = new Date();
+
+  const startDate = get24HoursAgoDate(this.curDate);
+  this.getOption.end_time = curDate.toISOString();
+  this.getOption.start_time = startDate.toISOString();
+  return this.getOption;
   }
 
   parseBasicStats(stats: Stats): BasicStats{
@@ -85,14 +111,14 @@ export class HomePage implements OnInit {
     if (nextPullDate === null || nextPullDate.getTime() < Date.now()) {
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
-      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
+      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
         if (stats.aggregate.length > 0 && stats.sleep.length > 0){
           this.basicStats = this.parseBasicStats(stats);
         }
         this.uService.userInfo = newUser;
       })
     } else {
-      this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
+      this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
         if (stats.aggregate.length > 0 && stats.sleep.length > 0){
           this.basicStats = this.parseBasicStats(stats);
         }

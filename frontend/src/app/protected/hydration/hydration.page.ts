@@ -77,6 +77,16 @@ export class Hydration implements OnInit, OnDestroy {
     this.analysisComment = [];
   }
 
+  get recOption(){
+
+    const curDate = new Date();
+
+    const startDate = get7DaysAgoDate(this.curDate);
+    this.getOption.end_time = curDate.toISOString();
+    this.getOption.start_time = startDate.toISOString();
+    return this.getOption;
+  }
+
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
@@ -125,7 +135,7 @@ export class Hydration implements OnInit, OnDestroy {
     if (nextPullDate === null || nextPullDate.getTime() < Date.now()){
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
-      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
+      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
         if (stats.aggregate.length > 0){
           this.hydration_history = this._getWaterStats(stats);
         }
@@ -133,7 +143,7 @@ export class Hydration implements OnInit, OnDestroy {
       })
     }
     else{
-      this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
+      this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
         if (stats.aggregate.length > 0){
           this.hydration_history = this._getWaterStats(stats);
         }

@@ -75,6 +75,16 @@ export class SleepPage implements  OnInit, OnDestroy{
     this._getRecommendation();
   }
 
+  get recOption(){
+
+    const curDate = new Date();
+
+    const startDate = get7DaysAgoDate(this.curDate);
+    this.getOption.end_time = curDate.toISOString();
+    this.getOption.start_time = startDate.toISOString();
+    return this.getOption;
+  }
+
   ngOnDestroy() {
     this.slumbers = [];
     this.recommendation = {
@@ -152,7 +162,7 @@ export class SleepPage implements  OnInit, OnDestroy{
     if (nextPullDate === null || nextPullDate.getTime() < Date.now()){
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
-      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
+      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
         if (stats.sleep.length > 0){
             this.slumbers = this._parseSleepStats(stats);
         }
@@ -160,7 +170,7 @@ export class SleepPage implements  OnInit, OnDestroy{
       })
     }
     else{
-      this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
+      this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
         if (stats.sleep.length > 0){
             this.slumbers = this._parseSleepStats(stats);
         }

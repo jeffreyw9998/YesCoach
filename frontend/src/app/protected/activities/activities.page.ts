@@ -3,19 +3,20 @@ import { IonicModule } from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
 import {GFitOptions, StatOptions} from "../../types/option";
-import {formatTime} from "../../services/util/util";
+import {formatTime, get24HoursAgoDate} from "../../services/util/util";
 import {integerActivitiesMap} from "../../integerActivitiesMap";
 import {Stats, SummarizedActivity} from "../../types/Stats";
 import {CommonModule} from "@angular/common";
 import {RouterModule} from '@angular/router';
-import {Recommendation} from "../../types/recommendation";
+import {Exercise, Recommendation} from "../../types/recommendation";
 import {Subscription} from "rxjs";
+import {ListItemComponent} from "../../list-item/list-item.component";
 @Component({
   selector: 'app-activities',
   templateUrl: 'activities.page.html',
   styleUrls: ['activities.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule]
+  imports: [IonicModule, CommonModule, RouterModule, ListItemComponent]
 })
 export class ActivitiesPage implements OnInit, OnDestroy{
 
@@ -43,26 +44,10 @@ export class ActivitiesPage implements OnInit, OnDestroy{
   curDate = new Date();
   // Date object 1 day ago
   startDate = new Date(this.curDate.getTime() - 24 * 60 * 60 * 1000)
-  activities: SummarizedActivity[] = [
-    {
-      name: 'Running',
-      date: '2021-03-01',
-      duration: '1h 30m',
-    },
-    {
-      name: 'Running',
-      date: '2021-03-01',
-      duration: '1h 30m',
-    },
-    {
-      name: 'Running',
-      date: '2021-03-01',
-      duration: '1h 30m',
-    }
-  ];
+  activities: SummarizedActivity[] =  [];
 
   comment: string = "";
-  exerciseList: {name: string, url: string}[] = []
+  exerciseList: Exercise[] = []
 
   getOption: StatOptions = {
     end_time: this.curDate.toISOString(),
@@ -113,6 +98,17 @@ export class ActivitiesPage implements OnInit, OnDestroy{
       this.comment = rec.fitness.comment;
       this.exerciseList = rec.fitness.exercise_list;
     }
+  }
+
+
+  get recOption(){
+
+    const curDate = new Date();
+
+    const startDate = get24HoursAgoDate(this.curDate);
+    this.getOption.end_time = curDate.toISOString();
+    this.getOption.start_time = startDate.toISOString();
+    return this.getOption;
   }
 
   private _getRecommendation(){
@@ -166,7 +162,7 @@ export class ActivitiesPage implements OnInit, OnDestroy{
     if (nextPullDate === null || nextPullDate.getTime() < Date.now()){
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
-      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.getOption).subscribe(([stats, newUser]) => {
+      this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
         if (stats.fitness.length > 0){
           this.activities = this.parseActivitiesStats(stats);
         }
@@ -175,7 +171,7 @@ export class ActivitiesPage implements OnInit, OnDestroy{
       })
     }
     else{
-      this.apiService.getStats(this.userInfo.id, this.getOption).subscribe((stats) => {
+      this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
         if (stats.fitness.length > 0){
           this.activities = this.parseActivitiesStats(stats);
         }
@@ -183,11 +179,6 @@ export class ActivitiesPage implements OnInit, OnDestroy{
     }
   }
 
-  handleChange(ev: any, name:string) {
-    if (ev.target.checked) {
-      console.log(name);
-    }
-  }
 
 
 

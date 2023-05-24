@@ -34,12 +34,7 @@
 
       <ion-card-content>
         <ul class="list">
-          <ion-checkbox  *ngFor="let exercise of exerciseList" (ionChange)="handleChange($event, exercise.name)">
-            <a target="_blank" [href]="exercise.url" referrerpolicy="no-referrer" *ngIf="exercise.url !== ''; else activity">{{exercise.name}}</a>
-            <ng-template #activity>
-              {{exercise.name}}
-            </ng-template>
-          </ion-checkbox>
+          <app-list-item *ngFor="let exercise of exerciseList; index as i" [userId]="this.userInfo.id" [goalIsGainMuscle]="this.goalIsGainMuscle" [exercise]="exercise" [index]="i"></app-list-item>
         </ul>
       </ion-card-content>
     </ion-card>

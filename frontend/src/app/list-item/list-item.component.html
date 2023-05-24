@@ -1,0 +1,9 @@
+<a target="_blank" [href]="exercise.url" referrerpolicy="no-referrer"
+   *ngIf="exercise.url !== ''; else activity">
+  {{exercise.name}}
+</a>
+<ion-checkbox [disabled]="exercise.checked" *ngIf="exercise.url !== ''" (ionChange)="handleChange($event)">
+</ion-checkbox>
+<ng-template #activity>
+    {{exercise.name}}
+</ng-template>

@@ -6,7 +6,7 @@ import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {Message} from "../../types/message";
 import {GFitOptions, StatOptions} from "../../types/option";
 import {Stats} from "../../types/Stats";
-import {Recommendation} from "../../types/recommendation";
+import {Exercise, Recommendation} from "../../types/recommendation";
 import {Preferences} from "../../types/preferences";
 
 @Injectable({
@@ -98,11 +98,23 @@ export class ApiService {
       });
   }
 
-  getRecommendation(user_id: string, which_activity: string[]): Observable<Recommendation>{
+  postMuscleChoice(user_id: string, exercise: Exercise): Observable<Message>{
+      const musclePayload = {
+        time: new Date().toISOString(),
+        muscle: exercise.body_part,
+        exercise: exercise.name
+      }
+      return this.http.post<Message>(environment.apiUrl + '/choice/' + user_id, JSON.stringify(musclePayload), {
+        headers: this.headers
+      })
+  }
+
+  getRecommendation(user_id: string, which_activity: string[], summarize: boolean = false): Observable<Recommendation>{
     let params = new HttpParams();
     for (let activity of which_activity){
       params = params.append('which_activity', activity);
     }
+    params = params.set('summarize', summarize.toString());
     return this.http.get<Recommendation>(environment.apiUrl + '/recommendation/' + user_id,
       {
         headers: this.headers,

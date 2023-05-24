@@ -1,20 +1,28 @@
-
-interface Comment{
+interface Comment {
   comment: string;
+  score?: number;
 }
 
 
-interface SleepComment extends Comment{
+interface SleepComment extends Comment {
   next_bed_time: string;
   next_wake_time: string;
 }
 
-interface FitnessComment extends Comment{
-  exercise_list: {name: string, url: string}[];
+export interface Exercise {
+  name: string,
+  url: string,
+  checked?: boolean,
+  body_part?: string
 }
 
-export interface Recommendation{
+interface FitnessComment extends Comment {
+  exercise_list: Exercise[];
+}
+
+export interface Recommendation {
   fitness?: FitnessComment;
   hydration?: Comment;
   sleep?: SleepComment;
+  comment?: string;
 }
