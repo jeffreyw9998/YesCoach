@@ -68,6 +68,7 @@ def get_week_count_with_activity(db: Session, user_id: str, fitness_ids: list[in
         .group_by(models.FitnessActivity.activityType).all()
     return dict(weeks)
 
+
 def get_week_muscle_freq(db: Session, user_id: str, muscles_exercises: list[str]) -> dict[str, int]:
     """
     query for how many times the user with user_id have done the
@@ -108,6 +109,7 @@ def get_week_count_with_activity_in_muscle(db: Session, user_id: str, muscles_ex
         .filter(models.MuscleChoice.user_id == user_id) \
         .group_by(models.MuscleChoice.exercise).all()
     return dict(weeks)
+
 
 def get_sleep_hour(sleep: schemas.SleepActivity) -> float:
     """
@@ -192,12 +194,12 @@ def _recommend_lifting_exercise(body_parts: list[str], db: Session, user_id: str
     # Capital all body parts
     body_parts = [body_part.capitalize() for body_part in body_parts]
     all_exercise = []
-    url_mappings = {}
+    exercise_metadata = {}
     for body_part in body_parts:
         body_part_exercise = get_body_part_exercises(body_part)
         for _exer in body_part_exercise:
             all_exercise.append(_exer['name'])
-            url_mappings[_exer['name']] = _exer['url']
+            exercise_metadata[_exer['name']] = {'url': _exer['url'], 'body_part': body_part}
     T_freq_dict = get_week_muscle_freq(db, user_id, all_exercise)
     if len(T_freq_dict) == 0:
         "if no exercise in list was done within the past week, randomly recommend"
@@ -218,11 +220,15 @@ def _recommend_lifting_exercise(body_parts: list[str], db: Session, user_id: str
             score = -calculate_tfidf(T_freq, D_freq, N)
             heapq.heappush(exercise_list, (score, exercise))
         exercise_list = heapq.nsmallest(length_function(len(exercise_list)), exercise_list)
-        exercise_list = [{'name': exercise[1], 'url': url_mappings[exercise[1]]} for exercise in exercise_list]
+        exercise_list = [{'name': exercise[1], 'url': exercise_metadata[exercise[1]]['url'],
+                          'body_part': exercise_metadata[exercise[1]]['body_part'],
+                          'checked': False} for exercise
+                         in exercise_list]
     # Generate comment based on the body parts, put an 'and' before the last body part
     body_parts_str = ", ".join(body_parts[:-1]) + " and " + body_parts[-1]
     comment = f"Here are some exercises for your {body_parts_str}: "
     return exercise_list, comment
+
 
 def length_function(length) -> int:
     """
@@ -231,6 +237,7 @@ def length_function(length) -> int:
     :return: length of the list if length > 10, else return 10
     """
     return 10 if length > 10 else length
+
 
 def _recommend_weight_loss_exercise(preference_list: list[str],
                                     db: Session, user_id: str,
@@ -337,7 +344,7 @@ class RecommendationEngine:
         comment = ""
         all_body_parts = get_all_body_parts()
         all_activities = get_all_activities()
-        latest_user_preference = get_latest_preference(db, user_id, self._user.goals[0])
+        latest_user_preference = crud.get_latest_preference(db, user_id, self._user.goals[0])
         body_parts = []
         if latest_user_preference is not None:
             goal = latest_user_preference.type
@@ -377,7 +384,7 @@ class RecommendationEngine:
         if self._summarize:
             if goal_percent > 1:
                 return {"score": round(100 / 3, 2)}
-            return {"score":  goal_percent * (100 / 3)}
+            return {"score": goal_percent * (100 / 3)}
         comment = analyze_sleep_trends(past_week_sleep_hours)
         sleep_debt = [_calculate_sleep_debt(get_sleep_hour(sleep_point), sleep_goal) for sleep_point in
                       past_week_sleep_hours]

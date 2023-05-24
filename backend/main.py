@@ -8,7 +8,7 @@ from src import models, crud, schemas
 from sqlalchemy.orm import Session
 import uvicorn
 from src.database import Base, get_db, engine
-from src.utils import activties_map
+from src.utils import activties_map, get_comment
 from typing import Any
 
 # create the database table if they do not already exist?
@@ -151,7 +151,7 @@ def post_preference(preference: schemas.Preference, user_id=Path(...), db: Sessi
         return {"detail": f"Successfully posted preference for user with id {user_id} and goal {preference.type}"}
 
 
-@app.post("/choice/{user_id", dependencies=[Depends(get_current_user)])
+@app.post("/choice/{user_id}", dependencies=[Depends(get_current_user)])
 def post_choice(choice: schemas.MuscleChoice, user_id=Path(...), db: Session = Depends(get_db)) -> dict[str, str]:
     try:
         crud.post_user_choice(db, user_id, choice)
@@ -181,6 +181,11 @@ def get_recommendations(which_activity: list[str] = Query(...),
         recommendation_dict = crud.get_activity_recommendations(
             db, user_id, which_activity, user, activties_map, summarize
         )
+        if summarize:
+            recommendation_dict['comment'] = get_comment(recommendation_dict['fitness']['score'],
+                                                         recommendation_dict['sleep']['score'],
+                                                         recommendation_dict['hydration']['score'])
+
     except Exception as e:
         if type(e) is HTTPException:
             raise e

@@ -27,6 +27,29 @@ def create_activities_map(f: IO) -> dict[int | str, str | int]:
     return activities_map
 
 
+def get_comment(sleep_score: float, fitness_score: float, hydration_score: float) -> str:
+    """
+    Get a comment based on the scores
+    :param sleep_score: sleep score
+    :param fitness_score: fitness score
+    :param hydration_score: hydration score
+    :return: A comment with some sort of emoji
+    """
+
+    # Calculate the total score
+    total_score = sleep_score + fitness_score + hydration_score
+
+    # Get the comment based on the total score
+    if total_score >= 90:
+        comment = "You're doing great! Keep up the good work! 💪"
+    elif total_score >= 70:
+        comment = "You're on the right track! Just keep at it! 🏃‍♂️"
+    elif total_score >= 50:
+        comment = "You could be doing better. Try to make some changes to your lifestyle. 😴"
+    else:
+        comment = "You need to make some serious changes to your lifestyle. ☠️"
+    return comment
+
 def hours_between_datetime(later_date: datetime, earlier_date: datetime) -> float:
     duration = later_date - earlier_date
     return duration.total_seconds() / 3600
