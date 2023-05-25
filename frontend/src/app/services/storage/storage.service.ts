@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Preferences} from "@capacitor/preferences";
 
 @Injectable({
@@ -6,25 +6,26 @@ import {Preferences} from "@capacitor/preferences";
 })
 export class StorageService {
 
-  constructor() { }
+  constructor() {
+  }
 
 
-  async set(key: string, value: string): Promise<void>{
+  async set(key: string, value: string): Promise<void> {
     await Preferences.set({key, value});
   }
 
-  async get(key: string): Promise<string | null>{
+  async get(key: string): Promise<string | null> {
     const {value} = await Preferences.get({key});
     return value;
   }
 
-  async remove(key: string): Promise<void>{
+  async remove(key: string): Promise<void> {
     await Preferences.remove({key});
   }
 
 
-  async removeEverything(): Promise<void>{
-      await Preferences.clear();
+  async removeEverything(): Promise<void> {
+    await Preferences.clear();
   }
 
 }

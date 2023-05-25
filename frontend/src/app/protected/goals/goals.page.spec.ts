@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { GoalsPage } from './goals.page';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {GoalsPage} from './goals.page';
 
 describe('GoalsPage', () => {
   let component: GoalsPage;

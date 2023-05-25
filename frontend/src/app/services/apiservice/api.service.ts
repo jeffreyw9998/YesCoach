@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {concatMap, map, Observable, forkJoin, BehaviorSubject} from "rxjs";
+import {BehaviorSubject, concatMap, forkJoin, map, Observable} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {UserInfo, UserInfoForm} from "../../types/userInfo";
 import {Message} from "../../types/message";
@@ -38,14 +38,6 @@ export class ApiService {
 
   }
 
-  private pullUserData(user_id: string, option: GFitOptions) {
-    return this.http.post<Message>(environment.apiUrl + '/activity/' + user_id,
-      JSON.stringify(option),
-      {
-        headers: this.headers
-      });
-  }
-
   registerAndPullData(userInfo: UserInfoForm, option: GFitOptions): Observable<UserInfo> {
     return this.http.post<UserInfo>(environment.apiUrl + '/users', JSON.stringify(userInfo), {
       headers: this.headers
@@ -68,8 +60,7 @@ export class ApiService {
     );
   }
 
-
-  postPreferences(user_id: string, preference: Preferences): Observable<Message>{
+  postPreferences(user_id: string, preference: Preferences): Observable<Message> {
     return this.http.post<Message>(environment.apiUrl + '/preference/' + user_id, JSON.stringify(preference), {
       headers: this.headers
     })
@@ -87,7 +78,7 @@ export class ApiService {
     for (let type of option.aggregate_types) {
       params = params.append('aggregate_types', type);
     }
-    if (option.summarize !== undefined){
+    if (option.summarize !== undefined) {
       params = params.append('summarize', option.summarize);
     }
 
@@ -98,20 +89,20 @@ export class ApiService {
       });
   }
 
-  postMuscleChoice(user_id: string, exercise: Exercise): Observable<Message>{
-      const musclePayload = {
-        time: new Date().toISOString(),
-        muscle: exercise.body_part,
-        exercise: exercise.name
-      }
-      return this.http.post<Message>(environment.apiUrl + '/choice/' + user_id, JSON.stringify(musclePayload), {
-        headers: this.headers
-      })
+  postMuscleChoice(user_id: string, exercise: Exercise): Observable<Message> {
+    const musclePayload = {
+      time: new Date().toISOString(),
+      muscle: exercise.body_part,
+      exercise: exercise.name
+    }
+    return this.http.post<Message>(environment.apiUrl + '/choice/' + user_id, JSON.stringify(musclePayload), {
+      headers: this.headers
+    })
   }
 
-  getRecommendation(user_id: string, which_activity: string[], summarize: boolean = false): Observable<Recommendation>{
+  getRecommendation(user_id: string, which_activity: string[], summarize: boolean = false): Observable<Recommendation> {
     let params = new HttpParams();
-    for (let activity of which_activity){
+    for (let activity of which_activity) {
       params = params.append('which_activity', activity);
     }
     params = params.set('summarize', summarize.toString());
@@ -122,26 +113,33 @@ export class ApiService {
       });
   }
 
-  pullDataAndGetData(user: UserInfo, postOption: GFitOptions, getOption: StatOptions): Observable<[Stats, UserInfo]>{
-      return this.pullUserData(user.id, postOption).pipe(
-        map((message: Message) => {
-          if (message.detail.startsWith("Successfully")) {
-            return "Success";
-          } else {
-            return message.detail;
-          }
-        }),
-        // Call getStats and updateUsers in parallel
-        concatMap( (message: string) => {
-          if (message != "Success") {
-            throw new Error(message);
-          }
-          else{
-            user.last_update = new Date().toISOString();
-           return forkJoin([this.getStats(user.id, getOption), this.updateUser(user)])
-          }
-        })
-      );
+  pullDataAndGetData(user: UserInfo, postOption: GFitOptions, getOption: StatOptions): Observable<[Stats, UserInfo]> {
+    return this.pullUserData(user.id, postOption).pipe(
+      map((message: Message) => {
+        if (message.detail.startsWith("Successfully")) {
+          return "Success";
+        } else {
+          return message.detail;
+        }
+      }),
+      // Call getStats and updateUsers in parallel
+      concatMap((message: string) => {
+        if (message != "Success") {
+          throw new Error(message);
+        } else {
+          user.last_update = new Date().toISOString();
+          return forkJoin([this.getStats(user.id, getOption), this.updateUser(user)])
+        }
+      })
+    );
+  }
+
+  private pullUserData(user_id: string, option: GFitOptions) {
+    return this.http.post<Message>(environment.apiUrl + '/activity/' + user_id,
+      JSON.stringify(option),
+      {
+        headers: this.headers
+      });
   }
 
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
@@ -21,6 +21,7 @@ export class GoalsPage implements OnInit {
   goals_quantity = [0, 0, 0];
   name = '';
   dbUser!: UserInfo;
+
   constructor(private readonly uService: UserService, private readonly apiService: ApiService,
               private readonly router: Router, private alertController: AlertController) {
   }
@@ -32,24 +33,26 @@ export class GoalsPage implements OnInit {
     this.goals[0] = this.dbUser.goals![0];
   }
 
-  setGoals(){
+  setGoals() {
 
-    if (this.goals.indexOf('sleep') === -1 || this.goals.indexOf('hydration') === -1){
+    if (this.goals.indexOf('sleep') === -1 || this.goals.indexOf('hydration') === -1) {
       this.goals = this.goals.concat(['sleep', 'hydration']);
     }
     // Clone the array
-    this.dbUser.goals =  [...this.goals];
+    this.dbUser.goals = [...this.goals];
     this.dbUser.goals_quantity = this.goals_quantity;
     this.apiService.updateUser(this.dbUser).subscribe({
       next: (newUser: UserInfo) => {
         this.uService.userInfo = newUser;
         this.goals.pop();
         this.goals.pop();
-        this.presentAlert('Goals updated!').then(() => {});
+        this.presentAlert('Goals updated!').then(() => {
+        });
       },
       error: (err) => {
         console.log(err);
-        this.presentAlert(err).then(() => {});
+        this.presentAlert(err).then(() => {
+        });
       }
     });
     // Remove sleep and hydration from goals
@@ -58,11 +61,10 @@ export class GoalsPage implements OnInit {
   async presentAlert(err: HttpErrorResponse | string) {
     let message: string;
     let header = 'Oh no';
-    if (typeof err === 'string'){
+    if (typeof err === 'string') {
       message = err;
       header = 'Awesome';
-    }
-    else{
+    } else {
       message = err.error.detail || err.statusText;
     }
     const alert = await this.alertController.create({

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
 import {GFitOptions, StatOptions} from "../../types/option";
@@ -17,32 +17,8 @@ import {Recommendation} from "../../types/recommendation";
 })
 
 
-
-
-export class SleepPage implements  OnInit, OnDestroy{
-  private userInfo = this.uService.userInfo;
-  private postOption: GFitOptions = {
-    access_token: this.uService.user!.authentication.accessToken!,
-    pullSleepFitness: true,
-    pullHydration: true,
-    pullCalories: true,
-    pullDistance: true,
-    pullSteps: true
-  }
-  // Date object 1 day ago
-  private curDate = new Date();
-  // Get sleep data from a week ago
-  private startDate = get7DaysAgoDate(this.curDate);
-
-  private getOption: StatOptions = {
-    end_time: this.curDate.toISOString(),
-    start_time: this.startDate.toISOString(),
-    which_tables: ['sleep'],
-    aggregate_types: [''],
-    summarize: false
-  }
-
-  slumbers : Slumber[]= [
+export class SleepPage implements OnInit, OnDestroy {
+  slumbers: Slumber[] = [
     {
       date: "2020-11-01",
       start: "2020-11-01 23:00",
@@ -59,7 +35,6 @@ export class SleepPage implements  OnInit, OnDestroy{
       end: "2020-11-02 07:00",
     }
   ]
-
   recommendation: Recommendation = {
     sleep: {
       comment: "You are doing great!",
@@ -67,15 +42,32 @@ export class SleepPage implements  OnInit, OnDestroy{
       next_wake_time: "07:00",
     }
   }
-
-  constructor(private uService: UserService, private apiService: ApiService) {}
-
-  ngOnInit() {
-    this._getBasicStats();
-    this._getRecommendation();
+  analysisComment = this._parseComment(this.recommendation.sleep?.comment);
+  private userInfo = this.uService.userInfo;
+  private postOption: GFitOptions = {
+    access_token: this.uService.user!.authentication.accessToken!,
+    pullSleepFitness: true,
+    pullHydration: true,
+    pullCalories: true,
+    pullDistance: true,
+    pullSteps: true
+  }
+  // Date object 1 day ago
+  private curDate = new Date();
+  // Get sleep data from a week ago
+  private startDate = get7DaysAgoDate(this.curDate);
+  private getOption: StatOptions = {
+    end_time: this.curDate.toISOString(),
+    start_time: this.startDate.toISOString(),
+    which_tables: ['sleep'],
+    aggregate_types: [''],
+    summarize: false
   }
 
-  get recOption(){
+  constructor(private uService: UserService, private apiService: ApiService) {
+  }
+
+  get recOption() {
 
     const curDate = new Date();
 
@@ -83,6 +75,11 @@ export class SleepPage implements  OnInit, OnDestroy{
     this.getOption.end_time = curDate.toISOString();
     this.getOption.start_time = startDate.toISOString();
     return this.getOption;
+  }
+
+  ngOnInit() {
+    this._getBasicStats();
+    this._getRecommendation();
   }
 
   ngOnDestroy() {
@@ -105,31 +102,26 @@ export class SleepPage implements  OnInit, OnDestroy{
     }, 50);
   };
 
-
-  analysisComment = this._parseComment(this.recommendation.sleep?.comment);
-
-  _parseComment(comment: string | undefined): string[]{
+  _parseComment(comment: string | undefined): string[] {
     // Get the first sentence
-    if (comment !== undefined){
+    if (comment !== undefined) {
       const sentences = comment.split(". ");
       if (sentences.length == 1) {
         return [comment, "", ""];
-      }
-      else{
+      } else {
         return [sentences[0] + ".", sentences[1] + ".", sentences.slice(2).join(". ")]
       }
-    }
-    else{
+    } else {
       return ["", "", ""];
     }
   }
 
 
-  _parseSleepStats(stats: Stats){
+  _parseSleepStats(stats: Stats) {
     const pastSleep = stats.sleep;
     const slumbers: Slumber[] = [];
 
-    for (let sleep of pastSleep){
+    for (let sleep of pastSleep) {
 
       // The startTime is a datetime string in ISO format. The timezone is UTC
       // but there is no timezone info in the string. So we need to convert it
@@ -149,7 +141,7 @@ export class SleepPage implements  OnInit, OnDestroy{
     return slumbers;
   }
 
-  private _getRecommendation(){
+  private _getRecommendation() {
     this.apiService.getRecommendation(this.userInfo.id, ['sleep']).subscribe((recommendation) => {
       this.recommendation = recommendation;
       this.analysisComment = this._parseComment(this.recommendation.sleep?.comment);
@@ -157,22 +149,21 @@ export class SleepPage implements  OnInit, OnDestroy{
   }
 
 
-  private _getBasicStats(){
+  private _getBasicStats() {
     const nextPullDate = this.uService.nextPullDataDate;
-    if (nextPullDate === null || nextPullDate.getTime() < Date.now()){
+    if (nextPullDate === null || nextPullDate.getTime() < Date.now()) {
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
       this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
-        if (stats.sleep.length > 0){
-            this.slumbers = this._parseSleepStats(stats);
+        if (stats.sleep.length > 0) {
+          this.slumbers = this._parseSleepStats(stats);
         }
         this.uService.userInfo = newUser;
       })
-    }
-    else{
+    } else {
       this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
-        if (stats.sleep.length > 0){
-            this.slumbers = this._parseSleepStats(stats);
+        if (stats.sleep.length > 0) {
+          this.slumbers = this._parseSleepStats(stats);
         }
       });
     }

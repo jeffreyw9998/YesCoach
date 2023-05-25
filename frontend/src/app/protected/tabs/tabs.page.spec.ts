@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideRouter} from '@angular/router';
+import {IonicModule} from '@ionic/angular';
 
-import { TabsPage } from './tabs.page';
+import {TabsPage} from './tabs.page';
 
 describe('TabsPage', () => {
   let component: TabsPage;

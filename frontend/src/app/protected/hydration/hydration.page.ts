@@ -61,7 +61,20 @@ export class Hydration implements OnInit, OnDestroy {
   }
 
   analysisComment: string[] = this._parseComment(this.recommendation.hydration?.comment);
-  constructor(private uService: UserService, private apiService: ApiService) {}
+
+  constructor(private uService: UserService, private apiService: ApiService) {
+  }
+
+  get recOption() {
+
+    const curDate = new Date();
+
+    const startDate = get7DaysAgoDate(this.curDate);
+    this.getOption.end_time = curDate.toISOString();
+    this.getOption.start_time = startDate.toISOString();
+    return this.getOption;
+  }
+
   ngOnInit() {
     this._getBasicStats();
     this._getRecommendation();
@@ -77,16 +90,6 @@ export class Hydration implements OnInit, OnDestroy {
     this.analysisComment = [];
   }
 
-  get recOption(){
-
-    const curDate = new Date();
-
-    const startDate = get7DaysAgoDate(this.curDate);
-    this.getOption.end_time = curDate.toISOString();
-    this.getOption.start_time = startDate.toISOString();
-    return this.getOption;
-  }
-
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
@@ -97,20 +100,19 @@ export class Hydration implements OnInit, OnDestroy {
   };
 
 
-  private _parseComment(comment: string | undefined): string[]{
-    if (comment === undefined){
+  private _parseComment(comment: string | undefined): string[] {
+    if (comment === undefined) {
       return [];
     }
     return comment.split(". ");
   }
 
 
-
-  private _getWaterStats(stats: Stats){
+  private _getWaterStats(stats: Stats) {
     const water = stats.aggregate;
     const waterHistory: Water[] = [];
 
-    for (let raw of water){
+    for (let raw of water) {
       const date = new Date(Date.parse(raw.endTime + "Z"));
       const amount = convertLitersToOunces(raw.quantity);
       waterHistory.push({
@@ -123,28 +125,27 @@ export class Hydration implements OnInit, OnDestroy {
 
   }
 
-  private _getRecommendation(){
+  private _getRecommendation() {
     this.apiService.getRecommendation(this.userInfo.id, ['hydration']).subscribe((recommendation) => {
       this.recommendation = recommendation;
       this.analysisComment = this._parseComment(this.recommendation.hydration?.comment);
     })
   }
 
-  private _getBasicStats(){
+  private _getBasicStats() {
     const nextPullDate = this.uService.nextPullDataDate;
-    if (nextPullDate === null || nextPullDate.getTime() < Date.now()){
+    if (nextPullDate === null || nextPullDate.getTime() < Date.now()) {
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
       this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
-        if (stats.aggregate.length > 0){
+        if (stats.aggregate.length > 0) {
           this.hydration_history = this._getWaterStats(stats);
         }
         this.uService.userInfo = newUser;
       })
-    }
-    else{
+    } else {
       this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
-        if (stats.aggregate.length > 0){
+        if (stats.aggregate.length > 0) {
           this.hydration_history = this._getWaterStats(stats);
         }
       });

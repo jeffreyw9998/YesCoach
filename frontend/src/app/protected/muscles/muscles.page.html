@@ -13,9 +13,10 @@
 
   <ion-list>
     <ion-item>
-      <ion-select value="no preference" aria-label="muscles" placeholder="Select Desired Muscles" [multiple]="true" (ionChange)="handleChange($event)">
+      <ion-select value="no preference" aria-label="muscles" placeholder="Select Desired Muscles" [multiple]="true"
+                  (ionChange)="handleChange($event)">
         <ion-select-option value="no preference">No Preference</ion-select-option>
-        <ion-select-option value="chest" >Chest</ion-select-option>
+        <ion-select-option value="chest">Chest</ion-select-option>
         <ion-select-option value="back">Back</ion-select-option>
         <ion-select-option value="shoulders">Shoulders</ion-select-option>
         <ion-select-option value="biceps">Biceps</ion-select-option>

@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
+import {ExploreContainerComponent} from '../explore-container/explore-container.component';
 
-import { SleepPage } from './sleep.page';
+import {SleepPage} from './sleep.page';
 
 describe('Tab3Page', () => {
   let component: SleepPage;

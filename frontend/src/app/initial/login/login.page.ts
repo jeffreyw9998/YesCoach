@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
 import {Router} from "@angular/router";
@@ -11,7 +10,7 @@ import {ApiService} from "../../services/apiservice/api.service";
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule]
 })
 export class LoginPage implements OnInit {
 
@@ -19,6 +18,7 @@ export class LoginPage implements OnInit {
               private readonly router: Router,
               private readonly apiService: ApiService) {
   }
+
   ngOnInit() {
   }
 
@@ -30,11 +30,14 @@ export class LoginPage implements OnInit {
       next: (data) => {
         // Redirect to home otherwise
         this.uService.userInfo = data;
-        this.router.navigate(['/']).then(() => {});
-      } ,
+        this.router.navigate(['/']).then(() => {
+        });
+      },
       error: (error) => {
         // Redirect to register page if user is not registered in database
-        this.router.navigate(['/register']).then(() => {});
+        console.log(error);
+        this.router.navigate(['/register']).then(() => {
+        });
       }
     })
 

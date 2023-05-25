@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {AlertController, IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
@@ -16,26 +16,29 @@ import {Router} from "@angular/router";
   imports: [IonicModule, CommonModule]
 })
 export class Muscles {
+  currentMuscles: string[] | undefined = undefined
   private preferences: Preferences = {
     preferenceArray: [],
     type: 'muscles',
     time: '0000:00:00T00:00:00.000Z'
   }
-  currentMuscles: string[] | undefined = undefined
   private userInfo: UserInfo = this.uService.userInfo;
-  constructor(private apiService: ApiService, private uService: UserService, private router: Router,
-              private alertController: AlertController){}
 
-  handleChange(ev:any) {
+  constructor(private apiService: ApiService, private uService: UserService, private router: Router,
+              private alertController: AlertController) {
+  }
+
+  handleChange(ev: any) {
     this.preferences.preferenceArray = ev.target.value;
   }
 
-  save(){
-    {/* api call here*/}
+  save() {
+    {/* api call here*/
+    }
     this.preferences.time = new Date().toISOString();
     this.apiService.postPreferences(this.userInfo.id, this.preferences).subscribe({
       next: (data) => {
-        if (data.detail.startsWith('Successfully')){
+        if (data.detail.startsWith('Successfully')) {
           this.apiService.callRecommendation.next(true);
           this.router.navigate(['/activities'], {queryParams: {saved: true}})
         }
@@ -61,7 +64,7 @@ export class Muscles {
   }
 
 
-  emptyArray(){
+  emptyArray() {
     return this.preferences.preferenceArray?.length === 0;
   }
 }

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 import {canActivateLogin} from "./guard/login-guard/login.guard";
 
 export const routes: Routes = [

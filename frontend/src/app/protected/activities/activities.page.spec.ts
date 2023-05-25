@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import {ExploreContainerComponent} from '../explore-container/explore-container.component';
 
-import { ActivitiesPage } from './activities.page';
+import {ActivitiesPage} from './activities.page';
 
 describe('Tab2Page', () => {
   let component: ActivitiesPage;

@@ -8,15 +8,14 @@
   </ion-header>
 
 
-
-<ion-grid class="ion-margin">
+  <ion-grid class="ion-margin">
     <ion-row class="ion-justify-content-center ion-padding-bottom">
       <img [src]="uService.user?.photoUrl" referrerpolicy="no-referrer" alt="User photo"/>
     </ion-row>
     <ion-row>
       <ion-col size="12">
         <ion-item>
-          <ion-input  label="Name" readonly="true" label-placement="floating" required="true" type="text"
+          <ion-input label="Name" readonly="true" label-placement="floating" required="true" type="text"
                      color="primary" [value]="uService.userInfo.name"></ion-input>
         </ion-item>
       </ion-col>
@@ -33,13 +32,13 @@
       <ion-col size="6">
         <ion-item>
           <ion-input label="Height (inches)" readonly="true" label-placement="floating" type="number" required="true"
-                      min="20" color="primary" [value]="uService.userInfo.height"></ion-input>
+                     min="20" color="primary" [value]="uService.userInfo.height"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-input label="Weight (pounds)" readonly="true" label-placement="floating" type="number" required="true"
-                      min="7" color="primary" [value]="uService.userInfo.weight"></ion-input>
+                     min="7" color="primary" [value]="uService.userInfo.weight"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -60,7 +59,9 @@
 
     <ion-row>
       <ion-col>
-        <a [routerLink]="[ '..','goals']"><ion-button expand="block">Set goals</ion-button></a>
+        <a [routerLink]="[ '..','goals']">
+          <ion-button expand="block">Set goals</ion-button>
+        </a>
       </ion-col>
       <ion-col>
         <ion-button (click)="logOut()" expand="block">Log out</ion-button>

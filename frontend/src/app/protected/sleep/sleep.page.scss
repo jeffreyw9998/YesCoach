@@ -1,46 +1,46 @@
 .main-div {
-    margin: 8px;
+  margin: 8px;
 }
 
 .header {
-    font-size: 30px;
-    margin-top: 16px;
+  font-size: 30px;
+  margin-top: 16px;
 }
 
 .past-container {
-    background-color: rgb(30, 30, 30);
-    outline: rgb(26, 25, 25) solid 1px;
-    padding: 8px;
-    border-radius: 10px;
+  background-color: rgb(30, 30, 30);
+  outline: rgb(26, 25, 25) solid 1px;
+  padding: 8px;
+  border-radius: 10px;
 }
 
 .data-div {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 
 }
 
 .date {
-    color: rgb(218, 84, 31);
+  color: rgb(218, 84, 31);
 }
 
 .data {
-    width: 100%;
-    margin: 4px;
-    background-color: rgb(30, 30, 30);
-    outline: rgb(26, 25, 25) solid 1px;
-    padding: 8px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  margin: 4px;
+  background-color: rgb(30, 30, 30);
+  outline: rgb(26, 25, 25) solid 1px;
+  padding: 8px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
 }
 
 .activity-div {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid rgb(60, 60, 60);
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(60, 60, 60);
 
 }

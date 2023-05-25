@@ -11,7 +11,7 @@ import {ApiService} from "../services/apiservice/api.service";
   standalone: true,
   imports: [CommonModule, IonicModule]
 })
-export class ListItemComponent  implements OnInit {
+export class ListItemComponent implements OnInit {
 
   @Input() exercise: Exercise = {
     name: '',
@@ -21,17 +21,20 @@ export class ListItemComponent  implements OnInit {
   @Input() goalIsGainMuscle = false;
   @Input() index: number = 0;
   @Input() userId: string = '';
-  constructor(private apiService: ApiService) { }
 
-  ngOnInit() {}
+  constructor(private apiService: ApiService) {
+  }
+
+  ngOnInit() {
+  }
 
   handleChange(ev: any) {
     if (ev.target.checked && !this.exercise.checked) {
       // Call api here if condition is met
-      if (this.goalIsGainMuscle){
+      if (this.goalIsGainMuscle) {
         this.apiService.postMuscleChoice(this.userId, this.exercise).subscribe({
           next: (res) => {
-            if (res.detail.startsWith('Successfully')){
+            if (res.detail.startsWith('Successfully')) {
               this.exercise.checked = true;
             }
           },

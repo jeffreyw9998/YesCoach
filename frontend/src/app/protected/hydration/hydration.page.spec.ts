@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {IonicModule} from '@ionic/angular';
 
-import { Hydration } from './hydration.page';
+import {Hydration} from './hydration.page';
 
 describe('NutritionComponent', () => {
   let component: Hydration;
@@ -9,7 +9,7 @@ describe('NutritionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ Hydration ],
+      declarations: [Hydration],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 

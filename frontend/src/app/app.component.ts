@@ -1,8 +1,7 @@
-import { Component, EnvironmentInjector, inject } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import {Component, EnvironmentInjector, inject} from '@angular/core';
+import {IonicModule} from '@ionic/angular';
+import {CommonModule} from '@angular/common';
 import {UserService} from "./services/gService/user.service";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',

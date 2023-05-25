@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AlertController, IonicModule} from '@ionic/angular';
 import {UserService} from "../../services/gService/user.service";
@@ -14,18 +14,9 @@ import {HttpErrorResponse} from "@angular/common/http";
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, NgOptimizedImage]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class RegisterPage implements OnInit {
-
-
-  get _18YearsAgo() {
-    const today = new Date();
-    const year = today.getFullYear() - 18;
-    const month = today.getMonth() + 1;
-    const day = today.getDate();
-    return new Date(`${year}-${month}-${day}`).toISOString();
-  }
 
 
   public userInfo: UserInfoForm = {
@@ -43,10 +34,24 @@ export class RegisterPage implements OnInit {
               private alertController: AlertController) {
   }
 
+  get _18YearsAgo() {
+    const today = new Date();
+    const year = today.getFullYear() - 18;
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    return new Date(`${year}-${month}-${day}`).toISOString();
+  }
+
+  get photoUrl() {
+    if (this.uService.user === null) {
+      return '';
+    }
+    return this.uService.user.photoUrl;
+  }
+
   ngOnInit() {
     this.userInfo.birthday = this._18YearsAgo;
   }
-
 
   register() {
     const option: GFitOptions = {
@@ -73,14 +78,6 @@ export class RegisterPage implements OnInit {
       },
     })
   }
-
-  get photoUrl() {
-    if (this.uService.user === null) {
-      return '';
-    }
-    return this.uService.user.photoUrl;
-  }
-
 
   async presentAlert(err: HttpErrorResponse) {
     const alert = await this.alertController.create({

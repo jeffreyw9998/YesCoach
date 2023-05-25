@@ -4,7 +4,7 @@ import {StorageService} from "../storage/storage.service";
 import {AuthCredential, FirebaseAuthentication, User} from "@capacitor-firebase/authentication";
 import {initializeApp} from "firebase/app";
 import {environment} from "../../../environments/environment";
-import { UserInfo } from 'app/types/userInfo';
+import {UserInfo} from 'app/types/userInfo';
 import {BehaviorSubject} from "rxjs";
 
 interface GoogleUser extends User {
@@ -19,9 +19,10 @@ export class UserService {
 
   user: GoogleUser | null = null;
   isLoggedIn = false;
+  userSubject = new BehaviorSubject<UserInfo | null>(null);
   private dbUserInfo: UserInfo | null = null;
   private nextPullDate: Date | null = null;
-  userSubject = new BehaviorSubject<UserInfo | null>(null);
+
   constructor(private storage: StorageService, private readonly platform: Platform,
               private readonly ngZone: NgZone) {
     FirebaseAuthentication.removeAllListeners().then(() => {
@@ -35,6 +36,33 @@ export class UserService {
     FirebaseAuthentication.getCurrentUser().then((result) => {
       // this.userSubject.next(result.user);
     });
+  }
+
+  get userInfo(): UserInfo {
+    // Clone userInfo object
+    return JSON.parse(JSON.stringify(this.dbUserInfo)) as UserInfo;
+  }
+
+  set userInfo(userInfo: UserInfo) {
+    this.storage.set('userInfo', JSON.stringify(userInfo)).then(() => {
+    })
+    this.userSubject.next(userInfo);
+    this.dbUserInfo = userInfo;
+  }
+
+  get nextPullDataDate(): Date | null {
+    return this.nextPullDate;
+  }
+
+  set nextPullDataDate(date: Date | null) {
+    if (date === null) {
+      this.storage.remove('nextPullDate').then(() => {
+      });
+    } else {
+      this.storage.set('nextPullDate', date.toISOString()).then(() => {
+      });
+    }
+    this.nextPullDate = date;
   }
 
   public async initialize(): Promise<void> {
@@ -69,30 +97,6 @@ export class UserService {
 
   }
 
-  get userInfo(): UserInfo{
-    // Clone userInfo object
-    return JSON.parse(JSON.stringify(this.dbUserInfo)) as UserInfo;
-  }
-
-  set userInfo(userInfo: UserInfo) {
-    this.storage.set('userInfo', JSON.stringify(userInfo)).then(() => {})
-    this.userSubject.next(userInfo);
-    this.dbUserInfo = userInfo;
-  }
-
-  get nextPullDataDate(): Date | null{
-    return this.nextPullDate;
-  }
-
-  set nextPullDataDate(date: Date | null) {
-    if (date === null) {
-      this.storage.remove('nextPullDate').then(() => {});
-    } else {
-      this.storage.set('nextPullDate', date.toISOString()).then(() => {});
-    }
-    this.nextPullDate = date;
-  }
-
   async signIn() {
 
     // Save user in storage
@@ -125,7 +129,7 @@ export class UserService {
   }
 
 
-  deleteCookies(){
+  deleteCookies() {
     // Clear cookies
     let allCookies = document.cookie.split(';');
     for (let i = 0; i < allCookies.length; i++) {

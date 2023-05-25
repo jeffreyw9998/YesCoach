@@ -7,7 +7,7 @@ import {UserInfo} from "../../types/userInfo";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Preferences} from "../../types/preferences";
 import {Router} from "@angular/router";
-import {integerActivitiesMap, type ActivityMap} from "../../integerActivitiesMap";
+import {type ActivityMap, integerActivitiesMap} from "../../integerActivitiesMap";
 
 @Component({
   selector: 'app-goals',
@@ -17,6 +17,9 @@ import {integerActivitiesMap, type ActivityMap} from "../../integerActivitiesMap
   imports: [IonicModule, CommonModule]
 })
 export class Activity implements OnInit {
+  allActivities: string[] = [];
+  blackList = new Set<string>(['Unknown (unable to detect activity)', 'Tilting (sudden device gravity change)',
+    'In vehicle', 'Housework', 'Still (not moving)', 'Walking (fitness)', 'Walking (stroller)', 'Walking (treadmill)'])
   private userInfo: UserInfo = this.uService.userInfo;
   private preferences: Preferences = {
     preferenceArray: [],
@@ -24,7 +27,6 @@ export class Activity implements OnInit {
     time: '0000:00:00T00:00:00.000Z'
   };
   private activityMap = integerActivitiesMap;
-  allActivities: string[] = [];
 
   constructor(private apiService: ApiService, private uService: UserService, private alertController: AlertController,
               private router: Router) {
@@ -34,21 +36,9 @@ export class Activity implements OnInit {
     this.allActivities = this._getAllActivitiess(this.activityMap);
   }
 
-  blackList = new Set<string>(['Unknown (unable to detect activity)', 'Tilting (sudden device gravity change)',
-    'In vehicle', 'Housework', 'Still (not moving)', 'Walking (fitness)', 'Walking (stroller)', 'Walking (treadmill)'])
-
   handleChange(ev: any) {
     this.preferences.preferenceArray = ev.target.value;
   }
-
-
-  private _getAllActivitiess(activityMap: ActivityMap) {
-    return Object.keys(activityMap).filter((key) => {
-      // Return all keys that are not integers
-      return !Number.isInteger(parseInt(key)) && !this.blackList.has(key);
-    })
-  }
-
 
   save() {
     {/* api call here*/
@@ -83,6 +73,13 @@ export class Activity implements OnInit {
     });
     await alert.present();
     await this.router.navigate(['/home'])
+  }
+
+  private _getAllActivitiess(activityMap: ActivityMap) {
+    return Object.keys(activityMap).filter((key) => {
+      // Return all keys that are not integers
+      return !Number.isInteger(parseInt(key)) && !this.blackList.has(key);
+    })
   }
 
 }

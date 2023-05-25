@@ -3,7 +3,7 @@ export type ActivityMap =
     [key: string | number]: string | number
   }
 
-export const integerActivitiesMap: ActivityMap  = {
+export const integerActivitiesMap: ActivityMap = {
   0: 'In vehicle',
   1: 'Biking',
   3: 'Still (not moving)',

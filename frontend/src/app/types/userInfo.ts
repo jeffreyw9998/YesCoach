@@ -1,5 +1,4 @@
-
-export interface UserInfoForm{
+export interface UserInfoForm {
   email: string;
   name: string;
   id: string;

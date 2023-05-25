@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {IonicModule} from '@ionic/angular';
-import {ExploreContainerComponent} from '../explore-container/explore-container.component';
 import {UserService} from "../../services/gService/user.service";
 import {ApiService} from "../../services/apiservice/api.service";
 import {GFitOptions, StatOptions} from "../../types/option";
@@ -13,18 +12,21 @@ import {Recommendation} from "../../types/recommendation";
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule, ExploreContainerComponent],
+  imports: [IonicModule],
 })
 export class HomePage implements OnInit {
 
 
-  basicStats : BasicStats = {
+  basicStats: BasicStats = {
     steps: "0",
     distance: "0",
     sleepHours: "0",
     burnedCalories: "0",
   }
-
+  lifestyleScore = {
+    score: 87,
+    comment: "You are doing great!"
+  }
   private userInfo = this.uService.userInfo;
   private postOption: GFitOptions = {
     access_token: this.uService.user!.authentication.accessToken!,
@@ -36,10 +38,7 @@ export class HomePage implements OnInit {
   }
   // Date object 24 hours ago
   private curDate = new Date();
-
   private startDate = get24HoursAgoDate(this.curDate);
-
-
   private getOption: StatOptions = {
     end_time: this.curDate.toISOString(),
     start_time: this.startDate.toISOString(),
@@ -48,13 +47,19 @@ export class HomePage implements OnInit {
     summarize: true,
   }
 
-  lifestyleScore = {
-    score: 87,
-    comment: "You are doing great!"
-  }
-
   constructor(private uService: UserService, private apiService: ApiService) {
   }
+
+  get recOption() {
+
+    const curDate = new Date();
+
+    const startDate = get24HoursAgoDate(this.curDate);
+    this.getOption.end_time = curDate.toISOString();
+    this.getOption.start_time = startDate.toISOString();
+    return this.getOption;
+  }
+
   handleRefresh(event: any) {
     setTimeout(() => {
       // Any calls to load data go here
@@ -69,41 +74,30 @@ export class HomePage implements OnInit {
     this._getRecommendation();
   }
 
-  private _getRecommendation(){
-    this.apiService.getRecommendation(this.userInfo.id, ['fitness', 'sleep', 'hydration'], true).subscribe((rec: Recommendation) => {
-      this.lifestyleScore.score =  (rec.sleep?.score || 0 ) + (rec.fitness?.score || 0) + (rec.hydration?.score || 0);
-      this.lifestyleScore.comment = rec.comment || "You are doing great!";
-    });
-  }
-
-
-  get recOption(){
-
-  const curDate = new Date();
-
-  const startDate = get24HoursAgoDate(this.curDate);
-  this.getOption.end_time = curDate.toISOString();
-  this.getOption.start_time = startDate.toISOString();
-  return this.getOption;
-  }
-
-  parseBasicStats(stats: Stats): BasicStats{
+  parseBasicStats(stats: Stats): BasicStats {
 
     const sleepSession = stats.sleep[stats.sleep.length - 1];
     const sleepStart = new Date(sleepSession.startTime)
     const sleepEnd = new Date(sleepSession.endTime)
-    const sleepHours = ((sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60 /60).toFixed(2)
+    const sleepHours = ((sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60 / 60).toFixed(2)
 
     const burnedCalories = (stats.aggregate[0] || {sum: 0}).sum;
     const distance = (stats.aggregate[1] || {sum: 0}).sum / 1000 / 1.609;
     const steps = (stats.aggregate[2] || {sum: 0}).sum;
 
     return {
-      burnedCalories : burnedCalories.toFixed(2),
-      distance : distance.toFixed(2),
-      steps : steps.toFixed(2),
-      sleepHours : sleepHours
+      burnedCalories: burnedCalories.toFixed(2),
+      distance: distance.toFixed(2),
+      steps: steps.toFixed(2),
+      sleepHours: sleepHours
     }
+  }
+
+  private _getRecommendation() {
+    this.apiService.getRecommendation(this.userInfo.id, ['fitness', 'sleep', 'hydration'], true).subscribe((rec: Recommendation) => {
+      this.lifestyleScore.score = (rec.sleep?.score || 0) + (rec.fitness?.score || 0) + (rec.hydration?.score || 0);
+      this.lifestyleScore.comment = rec.comment || "You are doing great!";
+    });
   }
 
   private _getBasicStats() {
@@ -112,14 +106,14 @@ export class HomePage implements OnInit {
       // Next pull date is next day
       this.uService.nextPullDataDate = new Date(this.curDate.getTime() + 86400000);
       this.apiService.pullDataAndGetData(this.userInfo, this.postOption, this.recOption).subscribe(([stats, newUser]) => {
-        if (stats.aggregate.length > 0 && stats.sleep.length > 0){
+        if (stats.aggregate.length > 0 && stats.sleep.length > 0) {
           this.basicStats = this.parseBasicStats(stats);
         }
         this.uService.userInfo = newUser;
       })
     } else {
       this.apiService.getStats(this.userInfo.id, this.recOption).subscribe((stats) => {
-        if (stats.aggregate.length > 0 && stats.sleep.length > 0){
+        if (stats.aggregate.length > 0 && stats.sleep.length > 0) {
           this.basicStats = this.parseBasicStats(stats);
         }
       });
