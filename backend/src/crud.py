@@ -268,15 +268,15 @@ def get_activity_recommendations(db: Session, user_id: str, which_activity: list
                 if summarize:
                     # get amount of water drank for the entire week
                     # get amount of exercise for the entire week
-                    a_week_ago = datetime.now().replace(hour=8, minute=0, second=0) - timedelta(days=7)
+                    a_week_ago = datetime.utcnow() - timedelta(days=7)
                     rec = personal_rec_engine.get_hydration_recommendation(
                         get_hydration(db, user_id, a_week_ago),
                         get_exercises(db, user_id, a_week_ago)
                     )
                 else:
                     rec = personal_rec_engine.get_hydration_recommendation(
-                        get_hydration(db, user_id, datetime.now().replace(hour=0, minute=0, second=0)),
-                        get_exercises(db, user_id, datetime.now().replace(hour=0, minute=0, second=0)))
+                        get_hydration(db, user_id, datetime.utcnow() - timedelta(days=1)),
+                        get_exercises(db, user_id, datetime.utcnow() - timedelta(days=1)))
                 rec_dict['hydration'] = rec
             case "fitness":
                 rec_dict['fitness'] = personal_rec_engine.get_fitness_recommendation(db, user_id, activities_map)
@@ -400,7 +400,7 @@ def push_distance(db: Session, user_id: str, start_time: datetime, present_time:
 
 
 def get_week_sleep_data(db: Session, user_id: str) -> list[models.SleepActivity]:
-    now = date.today()
+    now = datetime.utcnow()
     one_week_ago = now - timedelta(days=7)
     sleep_data = (
         db.query(models.SleepActivity)

@@ -33,7 +33,7 @@ def get_week_fitness_freq(db: Session, user_id: str, fitness_ids: list[int]) -> 
     query for how many times the user with user_id have done the
     activity with fitness_id in the past weel
     """
-    now = date.today()
+    now = datetime.now(timezone.utc)
     one_week_ago = now - timedelta(days=7)
     week_freq = db.query(models.FitnessActivity.activityType,
                          func.coalesce(func.count(models.FitnessActivity.id), 0)) \
@@ -74,7 +74,7 @@ def get_week_muscle_freq(db: Session, user_id: str, muscles_exercises: list[str]
     query for how many times the user with user_id have done the
     exercise in the muscles list in the past weel
     """
-    now = date.today()
+    now = datetime.utcnow()
     one_week_ago = now - timedelta(days=7)
     week_freq = db.query(models.MuscleChoice.exercise,
                          func.coalesce(func.count(models.MuscleChoice.exercise), 0)) \
@@ -329,7 +329,7 @@ class RecommendationEngine:
         :return: a dictionary with a comment and a list of exercise or a score
         """
         if self._summarize:
-            a_week_ago = datetime.now() - timedelta(days=7)
+            a_week_ago = datetime.now(timezone.utc) - timedelta(days=7)
             exercise_hour_benchmark = 7
             num_muscle_workout_benchmark = 2
             exercise_hour = crud.get_exercises(db, user_id, a_week_ago)
