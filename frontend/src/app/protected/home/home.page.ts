@@ -96,6 +96,7 @@ export class HomePage implements OnInit {
   private _getRecommendation() {
     this.apiService.getRecommendation(this.userInfo.id, ['fitness', 'sleep', 'hydration'], true).subscribe((rec: Recommendation) => {
       this.lifestyleScore.score = (rec.sleep?.score || 0) + (rec.fitness?.score || 0) + (rec.hydration?.score || 0);
+      this.lifestyleScore.score = Math.round(this.lifestyleScore.score);
       this.lifestyleScore.comment = rec.comment || "You are doing great!";
     });
   }
