@@ -204,7 +204,13 @@ def _recommend_lifting_exercise(body_parts: list[str], db: Session, user_id: str
     if len(T_freq_dict) == 0:
         "if no exercise in list was done within the past week, randomly recommend"
         for body_part in body_parts:
-            exercise_list.append(random.choice(get_body_part_exercises(body_part)))
+            # Pick 3 exercises from each body part
+            body_part_exercise = get_body_part_exercises(body_part)
+            if len(body_part_exercise) > 3:
+                body_part_exercise = random.sample(body_part_exercise, 3)
+            for exer in body_part_exercise:
+                exercise_list.append(
+                    {'name': exer['name'], 'url': exer['url'], 'body_part': body_part, "checked": False})
     else:
         N = get_week_counts_in_muscle(db, user_id)
         D_freq_dict = get_week_count_with_activity_in_muscle(db, user_id, all_exercise)
@@ -356,7 +362,7 @@ class RecommendationEngine:
                 case "muscles":
                     body_parts = random.sample(all_body_parts, 3)
                 case "weight":
-                    body_parts = random.sample(all_activities, 3)
+                    body_parts = random.sample(all_activities, 10)
         match goal:
             case "muscles":
                 # Recommend lifting exercises
